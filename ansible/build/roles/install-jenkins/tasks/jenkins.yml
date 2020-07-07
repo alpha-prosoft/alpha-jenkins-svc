@@ -1,0 +1,225 @@
+- debug:
+    msg: 'Start jenkins installation'
+
+- name: 'Echo PATH' 
+  shell: 'echo $PATH'
+
+- name: 'whereis' 
+  shell: 'whereis sudo'
+
+- name: 'Find waldo'
+  shell: 'find /usr -name sudo'
+
+- name: 'Print release'
+  shell: 'cat /etc/*release'
+
+- name: 'Print release'
+  shell: 'uname -r'
+
+- name: 'Crete docker group'
+  group:
+    name: docker
+    gid: 2020
+ 
+
+- name: 'Crete jenkins user'
+  user:
+    name: jenkins
+    uid: 2025
+    group: docker 
+
+- name: 'Enable universe repository'
+  shell: 'add-apt-repository universe'
+
+
+
+- name: 'Add jenkins apt key'
+  apt_key:
+    url: "https://pkg.jenkins.io/debian/jenkins.io.key"
+    state: present
+
+- name: 'Add jenkins repository'
+  apt_repository:
+    repo: "deb https://pkg.jenkins.io/debian binary/"
+    state: present
+    update_cache: true
+
+- name: 'Install dependecies'
+  apt:
+    name:
+      - curl
+      - daemon
+      - net-tools
+      - openjdk-11-jdk
+    state: present
+    update_cache: true
+
+
+- name: 'Install jenkins'
+  apt:
+    name:
+      - jenkins
+    state: present
+    update_cache: true
+  register: jenkins_result
+  until: jenkins_result is success
+  retries: 3
+  delay: 3
+
+
+
+- name: 'Disable startup wizard'
+  lineinfile:
+    dest: "/etc/default/jenkins"
+    regexp: '^JAVA_ARGS=.*'
+    line: 'JAVA_ARGS="-Djenkins.install.runSetupWizard=false"'
+
+- name: 'Disable startup wizard'
+  lineinfile:
+    dest: "/etc/default/jenkins"
+    regexp: '^HTTP_PORT=.*'
+    line: 'HTTP_PORT=8082'
+
+- name: 'Output jenkins settings'
+  shell: 'cat /etc/default/jenkins'
+
+- name: 'Start jenkins to generate inital password and instal plugins. We will start it manually later from userdata'
+  service: 
+    name: jenkins 
+    state: started 
+    enabled: no
+
+- name: 'Ensure enkins is running'
+  command: 'curl -D - -s --max-time 5 http://127.0.0.1:8080/cli/'
+  args:
+    warn: false
+  register: result
+  until: '(result.stdout.find("403 Forbidden") != -1) or (result.stdout.find("200 OK") != -1) and (result.stdout.find("Please wait while") == -1)'
+  retries: "20"
+  delay: "5"
+  changed_when: false
+  check_mode: false
+
+- shell: 'find / -name initialAdminPa*'
+
+- name: 'Read password'
+  command: 'cat /var/lib/jenkins/secrets/initialAdminPassword'
+  register: inital_admin_password
+
+- name: 'Set admin password to facts' 
+  set_fact:
+    jenkins_admin_password: '{{inital_admin_password.stdout }}'
+
+- name: 'Prepare update directory to avoid failure'
+  file:
+    path: "/var/lib/jenkins/updates"
+    state: directory
+    owner: jenkins
+    group: jenkins
+
+- name: 'Downloads plugins updated'
+  get_url:
+    url: "https://updates.jenkins.io/update-center.json"
+    dest: "/var/lib/jenkins/updates/default.json"
+    owner: jenkins
+    group: jenkins
+    mode: 0440
+  changed_when: false
+  register: get_result
+  until: get_result is success
+  retries: 5
+  delay: 10
+
+- name: 'Remove JS wrapper from file (First and last line)' 
+  replace:
+    path: "/var/lib/jenkins/updates/default.json"
+    regexp: "1d;$d"
+
+- name: 'Install plugins'
+  jenkins_plugin:
+    jenkins_home: "/var/lib/jenkins"
+    url_username: 'admin'
+    url_password: "{{ jenkins_admin_password }}"
+    state: 'present'
+    timeout: '25'
+    updates_expiration: '86400'
+    updates_url: 'https://updates.jenkins.io'
+    url: "http://127.0.0.1:8080"
+    with_dependencies: 'true'
+    name: "{{ item.name | default(item) }}"
+    version: "{{ item.version | default(omit) }}"
+  with_items: 
+  - name: blueocean
+  - name: reverse-proxy-auth-plugin
+  - name: ec2
+  - name: configuration-as-code
+  - name: dashboard-view
+  - name: antisamy-markup-formatter
+  - name: build-name-setter
+  - name: build-timeout
+  - name: config-file-provider
+  - name: credentials-binding
+  - name: embeddable-build-status
+  - name: rebuild
+  - name: ssh-agent
+  - name: throttle-concurrents
+  - name: timestamper
+  - name: ws-cleanup
+  - name: workflow-aggregator
+  - name: pipeline-stage-view
+  - name: build-pipeline-plugin
+  - name: conditional-buildstep
+  - name: parameterized-trigger
+  - name: git
+  - name: git-parameter
+  - name: repo
+  - name: matrix-project
+  - name: ssh-slaves
+  - name: matrix-auth
+  - name: email-ext
+  - name: emailext-template
+  - name: mailer
+  - name: publish-over-ssh
+  - name: gerrit-trigger
+  - name: ssh
+  register: plugin_result
+  until: plugin_result is success
+  retries: 10
+  delay: 10
+
+- name: 'Prepare update directory to avoid failure'
+  file:
+    path: "/etc/jenkins"
+    state: directory
+    owner: jenkins
+    group: jenkins
+
+
+- name: 'Copy jenkins configuration'
+  template:
+    src: jenkins-configuration.yml
+    dest: /etc/jenkins/jenkins-configuration-template.yml
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
+
+- name: 'Copy gerrit configuration'
+  template:
+    src: gerrit-trigger.xml
+    dest: /etc/jenkins/gerrit-trigger-template.xml
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
+
+- name: 'Add jekins configuration env variable'
+  shell: |
+     echo "CASC_JENKINS_CONFIG=/etc/jenkins/jenkins-configuration.yml" > /etc/environment
+
+- name: 'Restart jenkins'
+  service:
+    name: jenkins
+    state: restarted
+  ignore_errors: true
+
+- shell: 'systemctl status jenkins.service'
+
