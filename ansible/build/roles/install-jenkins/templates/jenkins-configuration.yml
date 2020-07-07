@@ -1,0 +1,252 @@
+credentials:
+  system:
+    domainCredentials:
+    - credentials:
+      - usernamePassword:
+          id: "gerrit-http"
+          scope: GLOBAL
+          username: "jenkins"
+          password: "${GerritHttpPassword:-}"
+      - usernamePassword:
+          id: "jira-http"
+          scope: GLOBAL
+          username: "${JiraHttpUser:-}"
+          password: "${JiraHttpPassword:-}"
+      - usernamePassword:
+          id: "docker-push-http"
+          scope: GLOBAL
+          username: "${DockerPushHttpUser:-}"
+          password: "${DockerPushHttpPassword:-}"
+      - basicSSHUserPrivateKey:
+          scope: GLOBAL
+          id: "gerrit-ssh"
+          username: "jenkins"
+          passphrase: ""
+          description: "Jenkins user SSH key"
+          privateKeySource:
+            directEntry:
+              privateKey: "${readFile:/home/jenkins/.ssh/id_rsa}"
+jenkins:
+  globalNodeProperties:
+  - envVars:
+      env:
+      - key: "GLOBAL_PROPERTIES_DOCKER_BUILD_ARGS"
+        value: "--build-arg DOCKER_URL=§{DOCKER_URL} --build-arg DOCKER_ORG=§{DOCKER_ORG} --build-arg BUILD_ID=§{BUILD_ID}  --progress plain --progress plain"
+      - key: "DOCKER_ORG"
+        value: "alphaprosoft"
+      - key: "DOCKER_PUSH_URL"
+        value: "docker.io"
+      - key: "DOCKER_URL"
+        value: "docker.io"
+      - key: "GERRIT_EMAIL"
+        value: "jenkins@alpha-prosoft.com"
+      - key: "GERRIT_URL"
+        value: "gerrit.pipeline.alpha-prosoft.com"
+      - key: "GERRIT_USER"
+        value: "jenkins"
+      - key: "GLOBAL_JIRA_URL"
+        value: "https://alpha-prosoft.atlassian.net"
+  clouds:
+  - amazonEC2:
+      cloudName: "EC2 Builder DEV"
+      region: "${Region}"
+      sshKeysCredentialsId: "gerrit-ssh"
+      templates:
+      - ami: "${AmiId}"
+        amiType:
+          unixData:
+            sshPort: "22"
+        associatePublicIp: true
+        connectBySSHProcess: false
+        connectionStrategy: PRIVATE_IP
+        deleteRootOnTermination: false
+        description: "AWS Dev Workers"
+        ebsOptimized: false
+        hostKeyVerificationStrategy: 'OFF'
+        iamInstanceProfile: "${InstanceProfileArn}"
+        idleTerminationMinutes: "5"
+        instanceCapStr: "1"
+        labelString: "aws-dev-worker"
+        maxTotalUses: -1
+        minimumNumberOfInstances: 0
+        minimumNumberOfSpareInstances: 0
+        mode: NORMAL
+        monitoring: false
+        numExecutors: 5
+        remoteAdmin: "jenkins"
+        securityGroups: "${InstanceSecurityGroupId}"
+        stopOnTerminate: false
+        subnetId: "${PrivateSubnet1A} ${PrivateSubnet2A}"
+        t2Unlimited: false
+        type: C54xlarge
+        useDedicatedTenancy: false
+        useEphemeralDevices: false
+        tmpDir: "/home/jenkins"
+        remoteFS: "/home/jenkins/workdir"
+        initScript: |-
+          #/bin/bash
+
+          set -e
+
+          export EnvironmentNameUpper=${EnvironmentNameUpper}
+          export EnvironmentNameLower=${EnvironmentNameLower}
+          export EnvironmentNameLower=${EnvironmentNameLower}
+          export EnvironmentNameUpper=${EnvironmentNameUpper}
+          export EnvironmentNameUpper=${EnvironmentNameUpper}
+          export EnvironmentNameLower=${EnvironmentNameLower}
+          export ServiceName=${ServiceName}
+          export ServiceAlias=${ServiceAlias}
+          export Region=${Region}
+          export AccountId=${AccountId}
+          export Username=${Username}
+
+          /opt/login-job.sh
+
+      useInstanceProfileForCredentials: true
+  - amazonEC2:
+      cloudName: "EC2 Builder Prod"
+      region: "${Region}"
+      sshKeysCredentialsId: "gerrit-ssh"
+      templates:
+      - ami: "${AmiId}"
+        amiType:
+          unixData:
+            sshPort: ""
+        associatePublicIp: true
+        connectBySSHProcess: false
+        connectionStrategy: PRIVATE_IP
+        deleteRootOnTermination: false
+        description: "AWS Prod Workers"
+        ebsOptimized: false
+        hostKeyVerificationStrategy: 'OFF'
+        iamInstanceProfile: "${InstanceProfileArn}"
+        idleTerminationMinutes: "5"
+        instanceCapStr: "1"
+        labelString: "aws-prod-worker"
+        maxTotalUses: -1
+        minimumNumberOfInstances: 0
+        minimumNumberOfSpareInstances: 0
+        mode: NORMAL
+        monitoring: false
+        numExecutors: 1
+        remoteAdmin: "jenkins"
+        securityGroups: "${InstanceSecurityGroupId}"
+        stopOnTerminate: false
+        subnetId: "${PrivateSubnet1A} ${PrivateSubnet2A}"
+        t2Unlimited: false
+        type: C54xlarge
+        useDedicatedTenancy: false
+        useEphemeralDevices: false
+        tmpDir: "/home/jenkins"
+        remoteFS: "/home/jenkins/workdir"
+        initScript: |-
+          #/bin/bash
+
+          set -e
+
+          export EnvironmentNameUpper=${EnvironmentNameUpper}
+          export EnvironmentNameLower=${EnvironmentNameLower}
+          export EnvironmentNameLower=${EnvironmentNameLower}
+          export EnvironmentNameUpper=${EnvironmentNameUpper}
+          export EnvironmentNameUpper=${EnvironmentNameUpper}
+          export EnvironmentNameLower=${EnvironmentNameLower}
+          export ServiceName=${ServiceName}
+          export ServiceAlias=${ServiceAlias}
+          export Region=${Region}
+          export AccountId=${AccountId}
+          export Username=${Username}
+
+          /opt/login-job.sh
+
+      useInstanceProfileForCredentials: true
+
+
+  agentProtocols:
+  - "JNLP4-connect"
+  - "Ping"
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+  crumbIssuer:
+    standard:
+      excludeClientIPFromCrumb: false
+  disableRememberMe: false
+  labelAtoms:
+  - name: "master"
+  markupFormatter: "plainText"
+  mode: NORMAL
+  myViewsTabBar: "standard"
+  numExecutors: 2
+  primaryView:
+    all:
+      name: "all"
+  projectNamingStrategy: "standard"
+  quietPeriod: 5
+  remotingSecurity:
+    enabled: true
+  scmCheckoutRetryCount: 0
+  securityRealm:
+    reverseProxy:
+      disableLdapEmailResolver: false
+      forwardedUser: "A-User"
+      headerGroups: "A-Groups"
+      headerGroupsDelimiter: "|"
+      inhibitInferRootDN: false
+      updateInterval: 15
+      userSearch: "uid={0}"
+  slaveAgentPort: -1
+  updateCenter:
+    sites:
+    - id: "default"
+      url: "https://updates.jenkins.io/update-center.json"
+  views:
+  - all:
+      name: "all"
+  viewsTabBar: "standard"
+security:
+  apiToken:
+    creationOfLegacyTokenEnabled: false
+    tokenGenerationOnCreationEnabled: false
+    usageStatisticsEnabled: true
+  sSHD:
+    port: -1
+unclassified:
+  bitbucketEndpointConfiguration:
+    endpoints:
+    - bitbucketCloudEndpoint:
+        enableCache: false
+        manageHooks: false
+        repositoriesCacheDuration: 0
+        teamCacheDuration: 0
+  buildDiscarders:
+    configuredBuildDiscarders:
+    - "jobBuildDiscarder"
+  defaultFolderConfiguration:
+    healthMetrics:
+    - worstChildHealthMetric:
+        recursive: true
+  fingerprints:
+    fingerprintCleanupDisabled: false
+    storage: "file"
+  gitHubConfiguration:
+    apiRateLimitChecker: ThrottleForNormalize
+  gitHubPluginConfig:
+    hookUrl: "https://${ServiceAlias}.${PrivateHostedZoneName}/github-webhook/"
+  gitSCM:
+    createAccountBasedOnEmail: false
+    showEntireCommitSummaryInChanges: false
+    useExistingAccountWithSameEmail: false
+  location:
+    adminAddress: "address not configured yet <nobody@nowhere>"
+    url: "https://${ServiceAlias}.${PrivateHostedZoneName}/"
+  mailer:
+    charset: "UTF-8"
+    useSsl: false
+    useTls: false
+  pollSCM:
+    pollingThreadCount: 10
+tool:
+  git:
+    installations:
+    - home: "git"
+      name: "Default"
