@@ -1,4 +1,72 @@
+credentials:
+  system:
+    domainCredentials:
+    - credentials:
+      - usernamePassword:
+          id: "gerrit-http"
+          scope: GLOBAL
+          username: "build"
+          password: "${GerritHttpPassword}"
+      - basicSSHUserPrivateKey:
+          id: "gerrit-ssh"
+          privateKeySource:
+            fileOnMaster:
+              keyStoreFile: "/home/build/.ssh/id_rsa"
+          scope: GLOBAL
+          username: "build"
+
 jenkins:
+  clouds:
+  - amazonEC2:
+      cloudName: "EC2 Builder"
+      region: "${Refion}"
+      sshKeysCredentialsId: "gerrit-ssh"
+      templates:
+      - ami: "${AmiId}"
+        amiType:
+          unixData:
+            sshPort: "22"
+        associatePublicIp: true
+        connectBySSHProcess: false
+        connectionStrategy: PRIVATE_IP
+        deleteRootOnTermination: false
+        description: "AWS Dev Workers"
+        ebsOptimized: false
+        hostKeyVerificationStrategy: 'OFF'
+        iamInstanceProfile: "${InstanceProfileArn}"
+        idleTerminationMinutes: "5"
+        instanceCapStr: "1"
+        labelString: "aws-dev-slaves"
+        maxTotalUses: -1
+        minimumNumberOfInstances: 0
+        minimumNumberOfSpareInstances: 0
+        mode: NORMAL
+        monitoring: false
+        numExecutors: 5
+        remoteAdmin: "jenkins"
+        securityGroups: "${SecurityGroupIda}"
+        stopOnTerminate: false
+        subnetId: "${} ${}"
+        t2Unlimited: false
+        type: C54xlarge
+        useDedicatedTenancy: false
+        useEphemeralDevices: false
+        userData: |-
+          #/bin/bash
+
+          set -e
+
+          mkdir /home/build/.ssh
+
+          aws ssm get-parameter \
+                  --name "/pipeline/public/build/.ssh/id_rsa.pub" \
+                  --with-decryption \
+                  --query 'Parameter.Value' \
+                  --output text | base64 -d > /home/build/.ssh/authorized_keys
+
+          chown build:build /home/build/.ssh/authorized_keys
+      useInstanceProfileForCredentials: true
+
   agentProtocols:
   - "JNLP4-connect"
   - "Ping"

@@ -4,7 +4,7 @@
 - include_role:
     name: alpha-build-lib/ami-base
   vars:
-    user_name: 'jenkins'
+    user_name: 'build'
 
 - name: 'Copy user config'
   copy: 
