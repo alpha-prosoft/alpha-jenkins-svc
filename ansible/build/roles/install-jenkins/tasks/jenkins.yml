@@ -16,21 +16,8 @@
 - name: 'Print release'
   shell: 'uname -r'
 
-- name: 'Crete docker group'
-  group:
-    name: docker
-    gid: 2020
- 
-
-- name: 'Crete jenkins user'
-  user:
-    name: jenkins
-    uid: 2025
-    group: docker 
-
 - name: 'Enable universe repository'
   shell: 'add-apt-repository universe'
-
 
 
 - name: 'Add jenkins apt key'
@@ -114,15 +101,15 @@
   file:
     path: "/var/lib/jenkins/updates"
     state: directory
-    owner: jenkins
-    group: jenkins
+    owner: build
+    group: build
 
 - name: 'Downloads plugins updated'
   get_url:
     url: "https://updates.jenkins.io/update-center.json"
     dest: "/var/lib/jenkins/updates/default.json"
-    owner: jenkins
-    group: jenkins
+    owner: build
+    group: build
     mode: 0440
   changed_when: false
   register: get_result
@@ -191,24 +178,24 @@
   file:
     path: "/etc/jenkins"
     state: directory
-    owner: jenkins
-    group: jenkins
+    owner: build
+    group: build
 
 
 - name: 'Copy jenkins configuration'
   template:
     src: jenkins-configuration.yml
     dest: /etc/jenkins/jenkins-configuration-template.yml
-    owner: jenkins
-    group: jenkins
+    owner: build
+    group: build
     mode: '0644'
 
 - name: 'Copy gerrit configuration'
   template:
     src: gerrit-trigger.xml
     dest: /etc/jenkins/gerrit-trigger-template.xml
-    owner: jenkins
-    group: jenkins
+    owner: build
+    group: build
     mode: '0644'
 
 - name: 'Add jekins configuration env variable'
