@@ -1,0 +1,16 @@
+- name: 'Install plugin'
+  jenkins_plugin:
+    jenkins_home: "/var/lib/jenkins"
+    url_username: 'admin'
+    url_password: "{{ jenkins_admin_password }}"
+    state: 'present'
+    timeout: '25'
+    updates_expiration: '86400'
+    updates_url: 'https://updates.jenkins.io'
+    url: "http://127.0.0.1:8080"
+    with_dependencies: 'true'
+    name: "{{ item.name | default(item) }}"
+    version: "{{ item.version | default(omit) }}"
+  register: plugin_result
+  until: plugin_result is success
+  retries: 10
