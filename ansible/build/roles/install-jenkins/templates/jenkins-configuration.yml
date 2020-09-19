@@ -44,9 +44,9 @@ jenkins:
         monitoring: false
         numExecutors: 5
         remoteAdmin: "jenkins"
-        securityGroups: "${SecurityGroupIda}"
+        securityGroups: "${SecurityGroupId}"
         stopOnTerminate: false
-        subnetId: "${} ${}"
+        subnetId: "${PrivateSubnet1A} ${PrivateSubnet2A}"
         t2Unlimited: false
         type: C54xlarge
         useDedicatedTenancy: false
