@@ -3,16 +3,16 @@
 set -e 
 
 
-echo "Building build-svc ${BUILD_ID}"
+echo "Building alpha-jenkins-svc ${BUILD_ID}"
 
-IMAGE_ID=$(aws ec2 describe-images --filters "Name=name,Values=build-alpha-build-svc.b${BUILD_ID}" --query 'Images[0].ImageId' --output text)
+IMAGE_ID=$(aws ec2 describe-images --filters "Name=name,Values=build-alpha-jenkins-svc.b${BUILD_ID}" --query 'Images[0].ImageId' --output text)
 echo "Image id ${IMAGE_ID}"
 aws ec2 deregister-image --image-id ${IMAGE_ID} 2> /dev/null | echo "No image existing"
 
 docker build --progress=plain \
              --no-cache \
 	     --build-arg BUILD_ID="${BUILD_ID}" \
-	     -t alpha-build-svc:b${BUILD_ID} \
+	     -t alpha-jenkins-svc:b${BUILD_ID} \
 	     -f Dockerfile .
 
 

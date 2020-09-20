@@ -5,16 +5,17 @@ credentials:
       - usernamePassword:
           id: "gerrit-http"
           scope: GLOBAL
-          username: "build"
-          password: "${GerritHttpPassword}"
+          username: "jenkins"
+          password: "${GerritHttpPassword:-}"
       - basicSSHUserPrivateKey:
-          id: "gerrit-ssh"
-          privateKeySource:
-            fileOnMaster:
-              keyStoreFile: "/home/build/.ssh/id_rsa"
           scope: GLOBAL
-          username: "build"
-
+          id: "gerrit-ssh"
+          username: "jenkins"
+          passphrase: ""
+          description: "Connect to gerrit over ssh"
+          privateKeySource:
+            directEntry:
+              privateKey: "${readFile:/home/jenkins/.ssh/id_rsa}"
 jenkins:
   clouds:
   - amazonEC2:
@@ -56,15 +57,15 @@ jenkins:
 
           set -e
 
-          mkdir /home/build/.ssh
+          mkdir /home/jenkins/.ssh
 
           aws ssm get-parameter \
-                  --name "/pipeline/public/build/.ssh/id_rsa.pub" \
+                  --name "/pipeline/public/jenkins/.ssh/id_rsa.pub" \
                   --with-decryption \
                   --query 'Parameter.Value' \
-                  --output text | base64 -d > /home/build/.ssh/authorized_keys
+                  --output text | base64 -d > /home/jenkins/.ssh/authorized_keys
 
-          chown build:build /home/build/.ssh/authorized_keys
+          chown jenkins:jenkins /home/jenkins/.ssh/authorized_keys
       useInstanceProfileForCredentials: true
 
   agentProtocols:

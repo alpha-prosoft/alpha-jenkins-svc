@@ -8,9 +8,9 @@
         <gerritHostName>scm-instance.pipeline.alpha-prosoft.com</gerritHostName>
         <gerritSshPort>29418</gerritSshPort>
         <gerritProxy></gerritProxy>
-        <gerritUserName>build</gerritUserName>
+        <gerritUserName>jenkins</gerritUserName>
         <gerritEMail></gerritEMail>
-        <gerritAuthKeyFile>/home/build/.ssh/id_rsa</gerritAuthKeyFile>
+        <gerritAuthKeyFile>/home/jenkins/.ssh/id_rsa</gerritAuthKeyFile>
         <gerritAuthKeyFilePassword>{AQAAABAAAAAQDe86/NzVEw62fq1otqGi7BG/fG7kpd1a18E8Xt1p0ms=}</gerritAuthKeyFilePassword>
         <useRestApi>false</useRestApi>
         <restCodeReview>false</restCodeReview>

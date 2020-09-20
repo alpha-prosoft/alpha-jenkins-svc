@@ -101,15 +101,15 @@
   file:
     path: "/var/lib/jenkins/updates"
     state: directory
-    owner: build
-    group: build
+    owner: jenkins 
+    group: jenkins
 
 - name: 'Downloads plugins updated'
   get_url:
     url: "https://updates.jenkins.io/update-center.json"
     dest: "/var/lib/jenkins/updates/default.json"
-    owner: build
-    group: build
+    owner: jenkins
+    group: jenkins
     mode: 0440
   changed_when: false
   register: get_result
@@ -178,24 +178,24 @@
   file:
     path: "/etc/jenkins"
     state: directory
-    owner: build
-    group: build
+    owner: jenkins
+    group: jenkins
 
 
 - name: 'Copy jenkins configuration'
   template:
     src: jenkins-configuration.yml
     dest: /etc/jenkins/jenkins-configuration-template.yml
-    owner: build
-    group: build
+    owner: jenkins
+    group: jenkins
     mode: '0644'
 
 - name: 'Copy gerrit configuration'
   template:
     src: gerrit-trigger.xml
     dest: /etc/jenkins/gerrit-trigger-template.xml
-    owner: build
-    group: build
+    owner: jenkins
+    group: jenkins
     mode: '0644'
 
 - name: 'Add jekins configuration env variable'
