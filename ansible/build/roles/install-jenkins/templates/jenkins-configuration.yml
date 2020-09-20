@@ -12,7 +12,7 @@ credentials:
           id: "gerrit-ssh"
           username: "jenkins"
           passphrase: ""
-          description: "Connect to gerrit over ssh"
+          description: "Jenkins user SSH key"
           privateKeySource:
             directEntry:
               privateKey: "${readFile:/home/jenkins/.ssh/id_rsa}"
