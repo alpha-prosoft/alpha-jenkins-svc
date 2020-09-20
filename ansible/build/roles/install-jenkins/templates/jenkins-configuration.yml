@@ -20,7 +20,7 @@ jenkins:
   clouds:
   - amazonEC2:
       cloudName: "EC2 Builder"
-      region: "${Refion}"
+      region: "${Region}"
       sshKeysCredentialsId: "gerrit-ssh"
       templates:
       - ami: "${AmiId}"
