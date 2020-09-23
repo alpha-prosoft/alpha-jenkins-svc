@@ -37,7 +37,7 @@ jenkins:
         iamInstanceProfile: "${InstanceProfileArn}"
         idleTerminationMinutes: "5"
         instanceCapStr: "1"
-        labelString: "aws-dev-slaves"
+        labelString: "aws-dev-worker"
         maxTotalUses: -1
         minimumNumberOfInstances: 0
         minimumNumberOfSpareInstances: 0
