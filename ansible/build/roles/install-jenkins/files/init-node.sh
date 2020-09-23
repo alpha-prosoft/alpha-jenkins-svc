@@ -11,6 +11,3 @@ aws ssm get-parameter \
         --query 'Parameter.Value' \
         --output text | base64 -d > /home/jenkins/.ssh/authorized_keys
 chown jenkins:jenkins /home/jenkins/.ssh/authorized_keys
-/opt/login-job.sh
-
-

@@ -58,20 +58,27 @@ jenkins:
         type: C54xlarge
         useDedicatedTenancy: false
         useEphemeralDevices: false
-        userData: |-
+        tmpDir: "/home/jenkins"
+        remoteFS: "/home/jenkins/workdir"
+        initScript: |-
           #/bin/bash
 
           set -e
 
-          mkdir /home/jenkins/.ssh
+          export EnvironmentNameUpper=${EnvironmentNameUpper}
+          export EnvironmentNameLower=${EnvironmentNameLower}
+          export EnvironmentNameLower=${EnvironmentNameLower}
+          export EnvironmentNameUpper=${EnvironmentNameUpper}
+          export EnvironmentNameUpper=${EnvironmentNameUpper}
+          export EnvironmentNameLower=${EnvironmentNameLower}
+          export ServiceName=${ServiceName}
+          export ServiceAlias=${ServiceAlias}
+          export Region=${Region}
+          export AccountId=${AccountId}
+          export Username=${Username}
 
-          aws ssm get-parameter \
-                  --name "/pipeline/public/jenkins/.ssh/id_rsa.pub" \
-                  --with-decryption \
-                  --query 'Parameter.Value' \
-                  --output text | base64 -d > /home/jenkins/.ssh/authorized_keys
+          /opt/login-job.sh
 
-          chown jenkins:jenkins /home/jenkins/.ssh/authorized_keys
       useInstanceProfileForCredentials: true
 
   agentProtocols:
