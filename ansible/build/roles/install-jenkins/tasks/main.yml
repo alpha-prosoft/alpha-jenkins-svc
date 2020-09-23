@@ -11,5 +11,24 @@
     src: 'init-userdata.sh'
     dest: '/etc/init-userdata.sh'
 
+- name: 'Copy init-node script'
+  copy: 
+    src: 'init-node.sh'
+    dest: '/opt/init-node.sh'
+    mode: 0755
+
+
+- name: 'Copy init-node service'
+  copy: 
+    src: 'init-node.service'
+    dest: '/etc/systemd/system/init-node.service'
+
+
+- name: 'Enable node service' 
+  service:
+    name: 'init-node'
+    state: stopped
+    enabled: yes
+
 - include_tasks: jenkins.yml
 

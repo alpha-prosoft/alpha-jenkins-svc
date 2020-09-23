@@ -1,0 +1,12 @@
+[Unit]
+Description=Execute init script
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/init-node.sh
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
