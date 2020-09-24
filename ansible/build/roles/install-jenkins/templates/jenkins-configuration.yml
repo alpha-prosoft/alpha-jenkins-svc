@@ -12,7 +12,11 @@ credentials:
           scope: GLOBAL
           username: "${JiraHttpUser:-}"
           password: "${JiraHttpPassword:-}"
- 
+      - usernamePassword:
+          id: "docker-push-http"
+          scope: GLOBAL
+          username: "${DockerPushHttpUser:-}"
+          password: "${DockerPushHttpPassword:-}"
       - basicSSHUserPrivateKey:
           scope: GLOBAL
           id: "gerrit-ssh"
@@ -169,4 +173,4 @@ tool:
   git:
     installations:
     - home: "git"
-      name: "Default"
+      Tname: "Default"

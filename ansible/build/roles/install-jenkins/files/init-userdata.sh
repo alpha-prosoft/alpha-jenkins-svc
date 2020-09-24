@@ -10,6 +10,17 @@ export JiraHttpPassword="$(echo ${jira_http} | jq -r '.password')"
 echo "JiraHttpUser=${JiraHttpUser}" >> /etc/environment
 echo "JiraHttpPassword=${JiraHttpPassword}" >> /etc/environment
 
+docker_push_http="$(aws  secretsmanager  get-secret-value \
+	                  --secret-id "/${EnvironmentNameLower}/jenkins/docker-push-http" \
+	                  --query "SecretString" --output text)"
+
+export DockerPushHttpUser="$(echo ${docker_push_http} | jq -r '.username')"
+export DockerPushHttpPassword="$(echo ${docker_push_http} | jq -r '.password')"
+
+echo "DockerPushHttpUser=${DockerPushHttpUser}" >> /etc/environment
+echo "DockerPushHttpPassword=${DockerPushHttpPassword}" >> /etc/environment
+
+
 
 
 echo "Preparing configuration"
