@@ -13,10 +13,20 @@ credentials:
           username: "${JiraHttpUser:-}"
           password: "${JiraHttpPassword:-}"
       - usernamePassword:
-          id: "docker-push-http"
+          id: "artifact-deploy-http"
           scope: GLOBAL
-          username: "${DockerPushHttpUser:-}"
-          password: "${DockerPushHttpPassword:-}"
+          username: "${ArtifactDeployHttpUser:-}"
+          password: "${ArtifactDeployHttpPassword:-}"
+      - usernamePassword:
+          id: "artifact-deploy-dev-http"
+          scope: GLOBAL
+          username: "${ArtifactDeployDevHttpUser:-}"
+          password: "${ArtifactDeployDevHttpPassword:-}"
+      - usernamePassword:
+          id: "docker-http"
+          scope: GLOBAL
+          username: "${DockerHttpUser:-}"
+          password: "${DockerHttpPassword:-}"
       - basicSSHUserPrivateKey:
           scope: GLOBAL
           id: "gerrit-ssh"
@@ -26,26 +36,35 @@ credentials:
           privateKeySource:
             directEntry:
               privateKey: "${readFile:/home/jenkins/.ssh/id_rsa}"
+ 
 jenkins:
   globalNodeProperties:
   - envVars:
       env:
       - key: "GLOBAL_PROPERTIES_DOCKER_BUILD_ARGS"
-        value: "--build-arg DOCKER_URL=§{DOCKER_URL} --build-arg DOCKER_ORG=§{DOCKER_ORG} --build-arg BUILD_ID=§{BUILD_ID}  --progress plain --progress plain"
+        value: "--build-arg DOCKER_URL=${DockerHttpUrl} --build-arg DOCKER_PUSH_URL=${DockerPushHttpUrl} --build-arg DOCKER_ORG=${DockerHttpOrg} --build-arg BUILD_ID=§{BUILD_ID}  --progress plain --progress plain"
       - key: "DOCKER_ORG"
-        value: "alphaprosoft"
+        value: "${DockerHttpOrg}"
       - key: "DOCKER_PUSH_URL"
-        value: "docker.io"
+        value: "${DockerPushHttpUrl}"
       - key: "DOCKER_URL"
-        value: "docker.io"
+        value: "${DockerHttpUrl}"
       - key: "GERRIT_EMAIL"
         value: "jenkins@alpha-prosoft.com"
       - key: "GERRIT_URL"
-        value: "gerrit.pipeline.alpha-prosoft.com"
+        value: "gerrit.${PrivateHostedZoneName}"
       - key: "GERRIT_USER"
         value: "jenkins"
       - key: "GLOBAL_JIRA_URL"
-        value: "https://alpha-prosoft.atlassian.net"
+        value: "${JiraHttpUrl}"
+      - key: "GLOBAL_REPOSITORY_DEV_URL"
+        value: "${ArtifactDeployDevHttpUrl}"
+      - key: "GLOBAL_REPOSITORY_PROD_URL"
+        value: "${ArtifactDeployHttpUrl}"
+      - key: "GLOBAL_GROUP_ID"
+        value: "alphaprosoft"
+      - key: "CONFIG_FILE_URL"
+        value: "s3://${AccountId}-${EnvironmentNameLower}-configuration/accounts.json"
   clouds:
   - amazonEC2:
       cloudName: "EC2 Builder DEV"
@@ -64,7 +83,7 @@ jenkins:
         ebsOptimized: false
         hostKeyVerificationStrategy: 'OFF'
         iamInstanceProfile: "${InstanceProfileArn}"
-        idleTerminationMinutes: "5"
+        idleTerminationMinutes: "10"
         instanceCapStr: "1"
         labelString: "aws-dev-worker"
         maxTotalUses: -1
@@ -72,7 +91,7 @@ jenkins:
         minimumNumberOfSpareInstances: 0
         mode: NORMAL
         monitoring: false
-        numExecutors: 5
+        numExecutors: 3
         remoteAdmin: "jenkins"
         securityGroups: "${InstanceSecurityGroupId}"
         stopOnTerminate: false

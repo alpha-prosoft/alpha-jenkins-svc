@@ -26,6 +26,8 @@
             - ec2:DescribeSubnets
             - iam:ListInstanceProfilesForRole
             - iam:PassRole
+            - s3:GetObject
+            - sts:AssumeRole
             Effect: Allow
             Resource: "*"
 

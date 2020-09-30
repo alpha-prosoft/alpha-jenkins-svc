@@ -37,7 +37,10 @@
       - curl
       - daemon
       - net-tools
-      - openjdk-11-jdk
+      - openjdk-11-jre-headless=11.0.7+10-3ubuntu1
+      - openjdk-11-jdk-headless=11.0.7+10-3ubuntu1
+      - openjdk-11-jre=11.0.7+10-3ubuntu1
+      - openjdk-11-jdk=11.0.7+10-3ubuntu1
     state: present
     update_cache: true
 
@@ -45,15 +48,13 @@
 - name: 'Install jenkins'
   apt:
     name:
-      - jenkins
+      - jenkins=2.263
     state: present
     update_cache: true
   register: jenkins_result
   until: jenkins_result is success
   retries: 3
   delay: 3
-
-
 
 - name: 'Disable startup wizard'
   lineinfile:
@@ -170,6 +171,8 @@
   - name: gerrit-trigger
   - name: ssh
   - name: ansicolor
+  - name: build-user-vars-plugin
+  - name: uno-choice
   register: plugin_result
   until: plugin_result is success
   retries: 10
@@ -202,6 +205,20 @@
 - name: 'Add jekins configuration env variable'
   shell: |
      echo "CASC_JENKINS_CONFIG=/etc/jenkins/jenkins-configuration.yml" > /etc/environment
+
+- name: 'Add job to download environment configuration'
+  cron:
+    name: "check dirs"
+    minute: "0"
+    hour: "5,2"
+    job: "ls -alh > /dev/null"
+
+- name: 'Copy plugins'
+  shell: |
+      set -e
+      mkdir -p /opt/jenkins/plugins/
+      cp /var/lib/jenkins/plugins/*.jpi /opt/jenkins/plugins/ || echo "No filed found"
+      cp /var/lib/jenkins/plugins/*.hpi /opt/jenkins/plugins/ || echo "No filed found"
 
 - name: 'Restart jenkins'
   service:
