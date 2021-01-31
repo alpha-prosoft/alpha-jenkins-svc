@@ -269,9 +269,9 @@ unclassified:
               </server>
             </servers>
           </settings>
-        id: "679fa139-fcf7-40b5-92cf-aaf110b1e9a5"
+        id: "global-maven-settings"
         isReplaceAll: true
-        name: "global-maven-settings"
+        name: "Global maven settngs"
         providerId: "org.jenkinsci.plugins.configfiles.maven.GlobalMavenSettingsConfig"
         serverCredentialMappings:
         - credentialsId: "artifact-deploy-dev-http"
