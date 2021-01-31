@@ -1,6 +1,7 @@
 # VPC First steps
 
 - Create Internet Gateway and attach to VPC
+- Dont forget to setup RouteTables
 
 
 ## Secrets
@@ -53,4 +54,12 @@ Docker setup. `url` and `push-url` can be same value.
   "push-url": "***",
   "org": "***"
 }
+```
+
+Initial instance setup
+```
+sudo apt-get update
+sudo apt-get install docker.io
+sudo echo "{ "features": { "buildkit": true } }" > /etc/docker/daemon.json
+sudo systemctl restart docker
 ```
