@@ -255,6 +255,27 @@ unclassified:
     createAccountBasedOnEmail: false
     showEntireCommitSummaryInChanges: false
     useExistingAccountWithSameEmail: false
+  globalConfigFiles:
+    configs:
+    - globalMavenSettings:
+        comment: "Global settings"
+        content: |
+          <settings>
+            <servers>
+              <server>
+                <id>dev</id>
+                <username>^§{ARTIFACT_USERNAME}</username>
+                <password>^§{ARTIFACT_PASSWORD}</password>
+              </server>
+            </servers>
+          </settings>
+        id: "679fa139-fcf7-40b5-92cf-aaf110b1e9a5"
+        isReplaceAll: true
+        name: "global-maven-settings"
+        providerId: "org.jenkinsci.plugins.configfiles.maven.GlobalMavenSettingsConfig"
+        serverCredentialMappings:
+        - credentialsId: "artifact-deploy-dev-http"
+          serverId: "dev"
   location:
     adminAddress: "address not configured yet <nobody@nowhere>"
     url: "https://${ServiceAlias}.${PrivateHostedZoneName}/"
