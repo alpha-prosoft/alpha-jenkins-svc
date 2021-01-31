@@ -59,7 +59,7 @@ Docker setup. `url` and `push-url` can be same value.
 Initial instance setup
 ```
 sudo apt-get update
-sudo apt-get install docker.io
+sudo apt-get install -y docker.io awscli
 sudo echo "{ "features": { "buildkit": true } }" > /etc/docker/daemon.json
 sudo systemctl restart docker
 ```
