@@ -28,7 +28,8 @@ Credentialsto deploy artifacts
 {
   "username": "***",
   "password": "***",
-  "url": "https://***"
+  "url": "https://***",
+  "org": "com.example"
 }
 
 ```
@@ -39,7 +40,8 @@ Credentals to deploy non productive builds of artifacts (i.e. Pull request build
 {
   "username": "***",
   "password": "***",
-  "url": "https://***"
+  "url": "https://***",
+  "org": "com.example"
 }
 ```
 

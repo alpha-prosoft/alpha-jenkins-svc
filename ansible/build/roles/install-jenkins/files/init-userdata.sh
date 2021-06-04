@@ -39,10 +39,12 @@ artifact_deploy_http="$(aws  secretsmanager  get-secret-value \
 export ArtifactDeployHttpUser="$(echo ${artifact_deploy_http} | jq -r '.username')"
 export ArtifactDeployHttpPassword="$(echo ${artifact_deploy_http} | jq -r '.password')"
 export ArtifactDeployHttpUrl="$(echo ${artifact_deploy_http} | jq -r '.url')"
+export ArtifactDeployOrg="$(echo ${artifact_deploy_http} | jq -r '.org')"
 
 echo "ArtifactDeployHttpUser=${ArtifactDeployHttpUser}" >> /etc/environment
 echo "ArtifactDeployHttpPassword=${ArtifactDeployHttpPassword}" >> /etc/environment
 echo "ArtifactDeployHttpUrl=${ArtifactDeployHttpUrl}" >> /etc/environment
+echo "ArtifactDeployOrg=${ArtifactDeployOrg}" >> /etc/environment
 
 
 artifact_deploy_dev_http="$(aws  secretsmanager  get-secret-value \
@@ -52,11 +54,12 @@ artifact_deploy_dev_http="$(aws  secretsmanager  get-secret-value \
 export ArtifactDeployDevHttpUser="$(echo ${artifact_deploy_dev_http} | jq -r '.username')"
 export ArtifactDeployDevHttpPassword="$(echo ${artifact_deploy_dev_http} | jq -r '.password')"
 export ArtifactDeployDevHttpUrl="$(echo ${artifact_deploy_dev_http} | jq -r '.url')"
+export ArtifactDeployDevOrg="$(echo ${artifact_deploy_dev_http} | jq -r '.org')"
 
 echo "ArtifactDeployDevHttpUser=${ArtifactDeployDevHttpUser}" >> /etc/environment
 echo "ArtifactDeployDevHttpPassword=${ArtifactDeployDevHttpPassword}" >> /etc/environment
 echo "ArtifactDeployDevHttpUrl=${ArtifactDeployDevHttpUrl}" >> /etc/environment
-
+echo "ArtifactDeployDevOrg=${ArtifactDeployDevOrg}" >> /etc/environment
 
 echo "Preparing configuration"
 envsubst < /etc/jenkins/jenkins-configuration-template.yml | tee /etc/jenkins/jenkins-configuration.yml
