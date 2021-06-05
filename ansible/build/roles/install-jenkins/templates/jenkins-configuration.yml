@@ -66,7 +66,7 @@ jenkins:
       - key: "ARTIFACT_ORG"
         value: "${ArtifactDeployOrg}"
       - key: "GLOBAL_GROUP_ID"
-        value: "alphaprosoft"
+        value: "${ArtifactDeployOrg}"
       - key: "CONFIG_FILE_URL"
         value: "s3://${AccountId}-${EnvironmentNameLower}-configuration/accounts.json"
   clouds:
