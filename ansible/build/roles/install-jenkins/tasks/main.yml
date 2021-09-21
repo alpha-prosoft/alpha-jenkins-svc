@@ -32,3 +32,11 @@
 
 - include_tasks: jenkins.yml
 
+- name: 'Install github cli'
+  args: 
+    executable: /bin/bash
+  shell: |
+    set -e
+    curl -L -o gh.deb https://github.com/cli/cli/releases/download/v2.0.0/gh_2.0.0_linux_amd64.deb
+    dpkg -i gh.deb
+

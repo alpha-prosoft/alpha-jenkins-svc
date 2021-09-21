@@ -15,6 +15,19 @@ echo "JiraHttpPassword=${JiraHttpPassword}" >> /etc/environment
 echo "JiraHttpUrl=${JiraHttpUrl}" >> /etc/environment
 
 
+github_http="$(aws  secretsmanager  get-secret-value \
+	                  --secret-id "/${EnvironmentNameLower}/jenkins/github-http" \
+	                  --query "SecretString" --output text)"
+
+export GithubHttpUser="$(echo ${github_http} | jq -r '.username')"
+export GithubHttpPassword="$(echo ${github_http} | jq -r '.password')"
+export GithubHttpUrl="$(echo ${github_http} | jq -r '.url')"
+
+echo "GithubHttpUser=${GithubHttpUser}" >> /etc/environment
+echo "GithubHttpPassword=${GithubHttpPassword}" >> /etc/environment
+echo "GithubHttpUrl=${GithubHttpUrl}" >> /etc/environment
+
+
 docker_http="$(aws  secretsmanager  get-secret-value \
 	                  --secret-id "/${EnvironmentNameLower}/jenkins/docker-http" \
 	                  --query "SecretString" --output text)"
@@ -45,6 +58,21 @@ echo "ArtifactDeployHttpUser=${ArtifactDeployHttpUser}" >> /etc/environment
 echo "ArtifactDeployHttpPassword=${ArtifactDeployHttpPassword}" >> /etc/environment
 echo "ArtifactDeployHttpUrl=${ArtifactDeployHttpUrl}" >> /etc/environment
 echo "ArtifactDeployOrg=${ArtifactDeployOrg}" >> /etc/environment
+
+
+artifact_deploy_public_http="$(aws  secretsmanager  get-secret-value \
+     	                       --secret-id "/${EnvironmentNameLower}/jenkins/artifact-deploy-public-http" \
+	                       --query "SecretString" --output text)"
+
+export ArtifactDeployPublicHttpUser="$(echo ${artifact_deploy_http} | jq -r '.username')"
+export ArtifactDeployPublicHttpPassword="$(echo ${artifact_deploy_http} | jq -r '.password')"
+export ArtifactDeployPublicHttpUrl="$(echo ${artifact_deploy_http} | jq -r '.url')"
+export ArtifactDeployPublicOrg="$(echo ${artifact_deploy_http} | jq -r '.org')"
+
+echo "ArtifactDeployPublicHttpUser=${ArtifactDeployPublicHttpUser}" >> /etc/environment
+echo "ArtifactDeployPublicHttpPassword=${ArtifactDeployPublicHttpPassword}" >> /etc/environment
+echo "ArtifactDeployPublicHttpUrl=${ArtifactDeployPublicHttpUrl}" >> /etc/environment
+echo "ArtifactDeployPublicOrg=${ArtifactDeployPublicOrg}" >> /etc/environment
 
 
 artifact_deploy_dev_http="$(aws  secretsmanager  get-secret-value \

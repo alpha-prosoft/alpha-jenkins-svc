@@ -9,7 +9,7 @@
 Setup assumes follwing secrets in AWS secret manager
 
 
-Credentials fot jira
+#Credentials for jira
 ```
 /pipeline/jenkins/jira-http
 
@@ -20,8 +20,19 @@ Credentials fot jira
 }
 ```
 
+#Credentials for github 
+```
+/pipeline/jenkins/github-http
 
-Credentialsto deploy artifacts
+{
+  "username": "***",
+  "password": "***",
+  "url": "https://***"
+}
+```
+
+
+#Credentialsto deploy artifacts
 ```
 /pipeline/jenkins/artifact-deploy-http
 
@@ -34,7 +45,7 @@ Credentialsto deploy artifacts
 
 ```
 
-Credentals to deploy non productive builds of artifacts (i.e. Pull request builds)
+#Credentals to deploy non productive builds of artifacts (i.e. Pull request builds)
 ```
 /pipeline/jenkins/artifact-deploy-dev-http
 {
@@ -45,8 +56,19 @@ Credentals to deploy non productive builds of artifacts (i.e. Pull request build
 }
 ```
 
+#Credentals to deploy public releases
+```
+/pipeline/jenkins/artifact-deploy-public-http
+{
+  "username": "***",
+  "password": "***",
+  "url": "https://***",
+  "org": "com.example"
+}
+```
 
-Docker setup. `url` and `push-url` can be same value. 
+
+#Docker setup. `url` and `push-url` can be same value. 
 ```
 /pipeline/jenkins/docker-http
 {
@@ -58,10 +80,15 @@ Docker setup. `url` and `push-url` can be same value.
 }
 ```
 
-Initial instance setup
+#Initial instance setup
 ```
 sudo apt-get update
 sudo apt-get install -y docker.io awscli jq
 sudo echo "{ "features": { "buildkit": true } }" > /etc/docker/daemon.json
 sudo systemctl restart docker
+```
+
+# Build and deploy
+```
+./local-deploy.sh
 ```
