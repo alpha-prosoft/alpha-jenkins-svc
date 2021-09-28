@@ -73,6 +73,8 @@ jenkins:
         value: "${ArtifactDeployDevHttpUrl}"
       - key: "GLOBAL_REPOSITORY_PROD_URL"
         value: "${ArtifactDeployHttpUrl}"
+      - key: "GLOBAL_REPOSITORY_PUBLIC_URL"
+        value: "${ArtifactDeployPublicHttpUrl}"
       - key: "ARTIFACT_ORG"
         value: "${ArtifactDeployOrg}"
       - key: "GLOBAL_GROUP_ID"
