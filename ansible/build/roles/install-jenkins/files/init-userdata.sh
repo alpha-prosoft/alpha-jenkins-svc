@@ -64,10 +64,10 @@ artifact_deploy_public_http="$(aws  secretsmanager  get-secret-value \
      	                       --secret-id "/${EnvironmentNameLower}/jenkins/artifact-deploy-public-http" \
 	                       --query "SecretString" --output text)"
 
-export ArtifactDeployPublicHttpUser="$(echo ${artifact_deploy_http} | jq -r '.username')"
-export ArtifactDeployPublicHttpPassword="$(echo ${artifact_deploy_http} | jq -r '.password')"
-export ArtifactDeployPublicHttpUrl="$(echo ${artifact_deploy_http} | jq -r '.url')"
-export ArtifactDeployPublicOrg="$(echo ${artifact_deploy_http} | jq -r '.org')"
+export ArtifactDeployPublicHttpUser="$(echo ${artifact_deploy_public_http} | jq -r '.username')"
+export ArtifactDeployPublicHttpPassword="$(echo ${artifact_deploy_public_http} | jq -r '.password')"
+export ArtifactDeployPublicHttpUrl="$(echo ${artifact_deploy_public_http} | jq -r '.url')"
+export ArtifactDeployPublicOrg="$(echo ${artifact_deploy_public_http} | jq -r '.org')"
 
 echo "ArtifactDeployPublicHttpUser=${ArtifactDeployPublicHttpUser}" >> /etc/environment
 echo "ArtifactDeployPublicHttpPassword=${ArtifactDeployPublicHttpPassword}" >> /etc/environment
