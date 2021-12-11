@@ -85,6 +85,10 @@ jenkins:
         value: "${ArtifactDeployOrg}"
       - key: "CONFIG_FILE_URL"
         value: "s3://${AccountId}-${EnvironmentNameLower}-configuration/accounts.json"
+      - key: "AWS_REGION"
+        value: "${Region}"
+      - key: "AWS_DEFAULT_REGION"
+        value: "${Region}"
   clouds:
   - amazonEC2:
       cloudName: "EC2 Builder DEV"
