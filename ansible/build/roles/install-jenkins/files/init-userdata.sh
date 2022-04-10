@@ -108,8 +108,6 @@ rm -rf /var/lib/jenkins/plugins/*
 cp /opt/jenkins/plugins/* /var/lib/jenkins/plugins/
 chown -R jenkins:jenkins /var/lib/jenkins/plugins/
 
-sed -i 's/8080/8082/g' /lib/systemd/system/jenkins.service
-
 systemctl daemon-reload
 
 systemctl start jenkins
