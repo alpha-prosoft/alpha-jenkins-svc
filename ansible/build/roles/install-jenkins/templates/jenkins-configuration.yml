@@ -121,7 +121,7 @@ jenkins:
         stopOnTerminate: false
         subnetId: "${PrivateSubnet1A} ${PrivateSubnet2A}"
         t2Unlimited: false
-        type: C54xlarge
+        type: C6i4xlarge
         useEphemeralDevices: false
         tmpDir: "/home/jenkins"
         remoteFS: "/home/jenkins/workdir"
@@ -176,7 +176,7 @@ jenkins:
         stopOnTerminate: false
         subnetId: "${PrivateSubnet1A} ${PrivateSubnet2A}"
         t2Unlimited: false
-        type: C54xlarge
+        type: C6i4xlarge
         useEphemeralDevices: false
         tmpDir: "/home/jenkins"
         remoteFS: "/home/jenkins/workdir"
