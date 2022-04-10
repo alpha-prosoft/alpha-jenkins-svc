@@ -2,6 +2,9 @@
 
 set -e
 
+systemctl stop jenkins
+
+
 jira_http="$(aws  secretsmanager  get-secret-value \
 	                  --secret-id "/${EnvironmentNameLower}/jenkins/jira-http" \
 	                  --query "SecretString" --output text)"
@@ -106,6 +109,8 @@ cp /opt/jenkins/plugins/* /var/lib/jenkins/plugins/
 chown -R jenkins:jenkins /var/lib/jenkins/plugins/
 
 sed -i 's/8080/8082/g' /lib/systemd/system/jenkins.service
+
+systemctl daemon-reload
 
 systemctl start jenkins
 
