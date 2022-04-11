@@ -6,37 +6,37 @@ credentials:
           id: "gerrit-http"
           scope: GLOBAL
           username: "jenkins"
-          password: "${GerritHttpPassword:-}"
+          password: "${GerritHttpPassword}"
       - usernamePassword:
           id: "jira-http"
           scope: GLOBAL
-          username: "${JiraHttpUser:-}"
-          password: "${JiraHttpPassword:-}"
+          username: "${JiraHttpUser}"
+          password: "${JiraHttpPassword}"
       - usernamePassword:
           id: "github-http"
           scope: GLOBAL
-          username: "${GithubHttpUser:-}"
-          password: "${GithubHttpPassword:-}"
+          username: "${GithubHttpUser}"
+          password: "${GithubHttpPassword}"
       - usernamePassword:
           id: "artifact-deploy-http"
           scope: GLOBAL
-          username: "${ArtifactDeployHttpUser:-}"
-          password: "${ArtifactDeployHttpPassword:-}"
+          username: "${ArtifactDeployHttpUser}"
+          password: "${ArtifactDeployHttpPassword}"
       - usernamePassword:
           id: "artifact-deploy-public-http"
           scope: GLOBAL
-          username: "${ArtifactDeployPublicHttpUser:-}"
-          password: "${ArtifactDeployPublicHttpPassword:-}"
+          username: "${ArtifactDeployPublicHttpUser}"
+          password: "${ArtifactDeployPublicHttpPassword}"
       - usernamePassword:
           id: "artifact-deploy-dev-http"
           scope: GLOBAL
-          username: "${ArtifactDeployDevHttpUser:-}"
-          password: "${ArtifactDeployDevHttpPassword:-}"
+          username: "${ArtifactDeployDevHttpUser}"
+          password: "${ArtifactDeployDevHttpPassword}"
       - usernamePassword:
           id: "docker-http"
           scope: GLOBAL
-          username: "${DockerHttpUser:-}"
-          password: "${DockerHttpPassword:-}"
+          username: "${DockerHttpUser}"
+          password: "${DockerHttpPassword}"
       - basicSSHUserPrivateKey:
           scope: GLOBAL
           id: "gerrit-ssh"
@@ -223,8 +223,6 @@ jenkins:
       name: "all"
   projectNamingStrategy: "standard"
   quietPeriod: 5
-  remotingSecurity:
-    enabled: true
   scmCheckoutRetryCount: 0
   securityRealm:
     reverseProxy:

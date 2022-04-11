@@ -11,7 +11,7 @@ chmod +x deploy.sh
 
 export TARGET_ACCOUNT_ID="$(aws sts get-caller-identity | jq -r '.Account')"
 
-docker run -it -v /var/run/docker.sock:/var/run/docker.sock \
+docker run -v /var/run/docker.sock:/var/run/docker.sock \
 	  -e TargetAccountId="${TARGET_ACCOUNT_ID}" \
 	  -e EnvironmentNameUpper="PIPELINE" \
 	  -e ServiceName="alpha-jenkins-svc" \

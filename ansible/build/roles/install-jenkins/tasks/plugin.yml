@@ -1,3 +1,6 @@
+- debug: 
+    msg: "Installing plugin {{ item.name }} version: {{ item.version | default('-') }}"
+
 - name: 'Install plugin'
   jenkins_plugin:
     jenkins_home: "/var/lib/jenkins"
@@ -14,3 +17,5 @@
   register: plugin_result
   until: plugin_result is success
   retries: 10
+  delay: 10
+

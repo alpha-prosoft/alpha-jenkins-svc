@@ -37,10 +37,10 @@
       - curl
       - daemon
       - net-tools
-      - openjdk-11-jre-headless=11.0.7+10-3ubuntu1
-      - openjdk-11-jdk-headless=11.0.7+10-3ubuntu1
-      - openjdk-11-jre=11.0.7+10-3ubuntu1
-      - openjdk-11-jdk=11.0.7+10-3ubuntu1
+      - openjdk-11-jre-headless
+      - openjdk-11-jdk-headless
+      - openjdk-11-jre
+      - openjdk-11-jdk
     state: present
     update_cache: true
 
@@ -117,20 +117,9 @@
     path: "/var/lib/jenkins/updates/default.json"
     regexp: "1d;$d"
 
-- name: 'Install plugins'
-  jenkins_plugin:
-    jenkins_home: "/var/lib/jenkins"
-    url_username: 'admin'
-    url_password: "{{ jenkins_admin_password }}"
-    state: 'present'
-    timeout: '25'
-    updates_expiration: '86400'
-    updates_url: 'https://updates.jenkins.io'
-    url: "http://127.0.0.1:8080"
-    with_dependencies: 'true'
-    name: "{{ item.name | default(item) }}"
-    version: "{{ item.version | default(omit) }}"
+- include_tasks: plugin.yml
   with_items: 
+  - name: credentials
   - name: blueocean
   - name: reverse-proxy-auth-plugin
   - name: ec2
@@ -168,10 +157,6 @@
   - name: build-user-vars-plugin
   - name: uno-choice
   - name: docker-workflow
-  register: plugin_result
-  until: plugin_result is success
-  retries: 10
-  delay: 10
 
 - name: 'Prepare update directory to avoid failure'
   file:
