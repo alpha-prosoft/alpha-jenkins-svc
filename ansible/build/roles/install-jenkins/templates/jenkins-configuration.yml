@@ -292,6 +292,11 @@ unclassified:
                 <username>^§{ARTIFACT_USERNAME}</username>
                 <password>^§{ARTIFACT_PASSWORD}</password>
               </server>
+              <server>
+                <id>clojars</id>
+                <username>^§{ARTIFACT_USERNAME}</username>
+                <password>^§{ARTIFACT_PASSWORD}</password>
+              </server>
             </servers>
           </settings>
         id: "global-maven-settings"
@@ -301,6 +306,11 @@ unclassified:
         serverCredentialMappings:
         - credentialsId: "artifact-deploy-dev-http"
           serverId: "dev"
+        - credentialsId: "artifact-deploy-http"
+          serverId: "prod"
+        - credentialsId: "artifact-deploy-public-http"
+          serverId: "clojars"
+
   location:
     adminAddress: "address not configured yet <nobody@nowhere>"
     url: "https://${ServiceAlias}.${PrivateHostedZoneName}/"
