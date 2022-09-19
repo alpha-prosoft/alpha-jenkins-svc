@@ -22,12 +22,12 @@
 
 - name: 'Add jenkins apt key'
   apt_key:
-    url: "https://pkg.jenkins.io/debian/jenkins.io.key"
+    url: "https://pkg.jenkins.io/debian-stable/jenkins.io.key"
     state: present
 
 - name: 'Add jenkins repository'
   apt_repository:
-    repo: "deb https://pkg.jenkins.io/debian binary/"
+    repo: "deb https://pkg.jenkins.io/debian-stable binary/"
     state: present
     update_cache: true
 
