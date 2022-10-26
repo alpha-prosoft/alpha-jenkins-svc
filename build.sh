@@ -25,11 +25,11 @@ echo "New build id: $BUILD_ID"
 
 export AWS_DEFAULT_REGION=$(curl --silent http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
 
-docker run --pull \
-	   --e BUILD_ID="${BUILD_ID}" \
-	   --e BuildId="${BUILD_ID}" \
-	   --e AWS_REGION="${AWS_DEFAULT_REGION}" \
-	   -v $PWD/home/build \
-	   alphaprosoft/ansible-img:latest 
-
+docker build --progress=plain \
+             --no-cache \
+	     --build-arg BUILD_ID="${BUILD_ID}" \
+	     --build-arg BuildId="${BUILD_ID}" \
+	     --build-arg AWS_REGION="${AWS_DEFAULT_REGION}" \
+	     -t alpha-jenkins-svc:b${BUILD_ID} \
+	     -f Dockerfile .
 
