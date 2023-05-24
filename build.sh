@@ -25,8 +25,6 @@ echo "New build id: $BUILD_ID"
 
 export AWS_DEFAULT_REGION=$(curl --silent http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
 
-ls -la /etc/ssl/certs/ca-certificates.crt 
-cp /etc/ssl/certs/ca-certificates.crt ca-certificates.crt
 docker build --progress=plain \
              --no-cache \
 	     --build-arg BUILD_ID="${BUILD_ID}" \
