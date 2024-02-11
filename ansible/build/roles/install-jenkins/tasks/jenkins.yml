@@ -157,6 +157,7 @@
   - name: build-user-vars-plugin
   - name: uno-choice
   - name: docker-workflow
+  - name: pipeline-graph-view
 
 - name: 'Prepare update directory to avoid failure'
   file:
