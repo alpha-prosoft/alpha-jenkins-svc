@@ -23,13 +23,15 @@ export BUILD_ID=$((BUILD_ID+1))
 echo "New build id: $BUILD_ID"
 
 
-export AWS_DEFAULT_REGION=$(curl --silent http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
+SESSION_TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+export AWS_DEFAULT_REGION=$(curl -s -H "X-aws-ec2-metadata-token: $SESSION_TOKEN" http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
 
 docker build --progress=plain \
              --no-cache \
 	     --build-arg BUILD_ID="${BUILD_ID}" \
 	     --build-arg BuildId="${BUILD_ID}" \
 	     --build-arg AWS_REGION="${AWS_DEFAULT_REGION}" \
+      	     --build-arg AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION}" \
 	     -t alpha-jenkins-svc:b${BUILD_ID} \
 	     -f Dockerfile .
 
