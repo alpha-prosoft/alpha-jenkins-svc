@@ -27,8 +27,6 @@
 - name: 'Install dependecies'
   yum:
     name:
-      - curl
-      - daemon
       - net-tools
       - java-17-amazon-corretto
     state: present
