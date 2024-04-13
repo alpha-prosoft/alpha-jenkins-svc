@@ -44,15 +44,6 @@
   retries: 3
   delay: 3
 
-- name: 'Disable startup wizard'
-  lineinfile:
-    dest: "/etc/default/jenkins"
-    regexp: '^JAVA_ARGS=.*'
-    line: 'JAVA_ARGS="-Djenkins.install.runSetupWizard=false"'
-
-- name: 'Output jenkins settings'
-  shell: 'cat /etc/default/jenkins'
-
 - name: 'Start jenkins to generate inital password and instal plugins. We will start it manually later from userdata'
   service: 
     name: jenkins 
