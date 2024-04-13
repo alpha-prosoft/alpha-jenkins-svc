@@ -1,10 +1,13 @@
 #!/bin/bash
 
-set -e 
+set -eou pipefail
 
 export TARGET_ACCOUNT_ID="$(aws sts get-caller-identity | jq -r '.Account')"
 export DOCKER_BUILDKIT=0
 export DOCKER_BUILDKIT=1
+
+SESSION_TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+export AWS_DEFAULT_REGION=$(curl -s -H "X-aws-ec2-metadata-token: $SESSION_TOKEN" http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
 
 export LATEST_IMAGE="$(aws ec2 describe-images \
                           --owners self --no-paginate  \
@@ -23,8 +26,6 @@ export BUILD_ID=$((BUILD_ID+1))
 echo "New build id: $BUILD_ID"
 
 
-SESSION_TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
-export AWS_DEFAULT_REGION=$(curl -s -H "X-aws-ec2-metadata-token: $SESSION_TOKEN" http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
 
 docker build --progress=plain \
              --no-cache \
