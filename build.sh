@@ -3,7 +3,7 @@
 set -eou pipefail
 
 export TARGET_ACCOUNT_ID="$(aws sts get-caller-identity | jq -r '.Account')"
-export DOCKER_BUILDKIT=0
+
 export DOCKER_BUILDKIT=1
 
 SESSION_TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
@@ -29,6 +29,7 @@ echo "New build id: $BUILD_ID"
 
 docker build --progress=plain \
              --no-cache \
+             --pull \
 	     --build-arg BUILD_ID="${BUILD_ID}" \
 	     --build-arg BuildId="${BUILD_ID}" \
 	     --build-arg AWS_REGION="${AWS_DEFAULT_REGION}" \
