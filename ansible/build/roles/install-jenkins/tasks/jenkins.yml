@@ -199,5 +199,11 @@
     name: jenkins
     state: stopped
 
-- shell: 'systemctl status jenkins.service'
+- shell: |
+    systemctl status jenkins.service
+  register: output
+  ignore_errors: True
+
+- debug: 
+    var: output
 
