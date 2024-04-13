@@ -137,11 +137,6 @@
   - name: docker-workflow
   - name: pipeline-graph-view
 
-- name: 'Restart Jenkins'
-  service:
-    name: jenkins
-    state: restarted
-
 - name: 'Prepare update directory to avoid failure'
   file:
     path: "/etc/jenkins"
