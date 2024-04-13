@@ -59,7 +59,8 @@
   changed_when: false
   check_mode: false
 
-- shell: 'find / -name initialAdminPa*'
+- name: 'Check where initial admin password is stored'
+  shell: 'find /var/ -name initialAdminPa*'
 
 - name: 'Read password'
   command: 'cat /var/lib/jenkins/secrets/initialAdminPassword'
