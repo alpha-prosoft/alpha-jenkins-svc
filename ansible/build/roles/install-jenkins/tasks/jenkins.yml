@@ -256,7 +256,7 @@
           storage: "file"
         location:
           adminAddress: "address not configured yet <nobody@nowhere>"
-          url: "http://127.0.0.1:8080/"
+          url: "http://127.0.0.1:8082/"
         pollSCM:
           pollingThreadCount: 10
       tool:
@@ -272,8 +272,20 @@
   service:
     name: jenkins
     state: running
-    
-- name: 'Restart jenkins'
+
+- name: 'Wait for Jenkins to start up 2'
+  uri:
+    url: http://127.0.0.1:8082
+    status_code: 200
+    timeout: 5
+  register: jenkins_service_status
+  retries: 60
+  delay: 5
+  until: >
+     'status' in jenkins_service_status and
+     jenkins_service_status['status'] == 200
+
+- name: 'Stop jenkins'
   service:
     name: jenkins
     state: stopped
