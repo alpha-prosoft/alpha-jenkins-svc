@@ -37,6 +37,7 @@
     executable: /bin/bash
   shell: |
     set -e
-    curl -L -o gh.deb https://github.com/cli/cli/releases/download/v2.0.0/gh_2.0.0_linux_amd64.deb
-    dpkg -i gh.deb
+    
+    curl -L -o gh.rpm https://github.com/cli/cli/releases/download/v2.15.0/gh_2.15.0_linux_386.rpm
+    rpm -i gh.rpm
 
