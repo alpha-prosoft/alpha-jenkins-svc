@@ -197,25 +197,6 @@
 - name: 'Restart jenkins'
   service:
     name: jenkins
-    state: restarted
-
-- name: 'Wait for Jenkins to start up 2'
-  uri:
-    url: http://127.0.0.1:8082
-    status_code: 200
-    timeout: 5
-    headers:
-      A-User: "Admin"
-  register: jenkins_service_status
-  retries: 60
-  delay: 5
-  until: >
-     'status' in jenkins_service_status and
-     jenkins_service_status['status'] == 200
-
-- name: 'Restart jenkins'
-  service:
-    name: jenkins
     state: stopped
 
 - shell: 'systemctl status jenkins.service'
