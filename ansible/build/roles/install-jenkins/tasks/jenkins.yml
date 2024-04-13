@@ -25,6 +25,7 @@
 - name: Add repository
   ansible.builtin.yum_repository:
     name: jenkins
+    description: "Jenkins repo"
     baseurl: https://pkg.jenkins.io/redhat-stable/jenkins.repo
 
 - name: 'Install dependecies'
