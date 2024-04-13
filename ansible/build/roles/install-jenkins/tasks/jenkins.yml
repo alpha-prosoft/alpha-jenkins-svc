@@ -202,4 +202,6 @@
      echo 'Environment="JENKINS_PORT=8082"' >> $ov
      echo 'Environment="JAVA_ARGS=-Djenkins.install.runSetupWizard=false"' >> $ov
      
+     sed -i 's#<installStateName>NEW.*#<installStateName>RUNNING<\/installStateName>#g' /var/lib/jenkins/config.xml
+     
      systemctl daemon-reload
