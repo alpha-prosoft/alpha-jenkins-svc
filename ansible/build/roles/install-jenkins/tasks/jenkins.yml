@@ -15,24 +15,20 @@
 
 - name: 'Print release'
   shell: 'uname -r'
-
-- name: 'Enable universe repository'
-  shell: 'add-apt-repository universe'
-
-
-- name: 'Add jenkins apt key'
-  apt_key:
-    url: "https://pkg.jenkins.io/debian-stable/jenkins.io.key"
+  
+- name: Add jenkins key
+  ansible.builtin.rpm_key:
     state: present
+    key: https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
 
-- name: 'Add jenkins repository'
-  apt_repository:
-    repo: "deb https://pkg.jenkins.io/debian-stable binary/"
-    state: present
-    update_cache: true
+
+- name: Add repository
+  ansible.builtin.yum_repository:
+    name: jenkins
+    baseurl: https://pkg.jenkins.io/redhat-stable/jenkins.repo
 
 - name: 'Install dependecies'
-  apt:
+  yum:
     name:
       - curl
       - daemon
@@ -46,7 +42,7 @@
 
 
 - name: 'Install jenkins'
-  apt:
+  yum:
     name:
       - jenkins
     state: present
