@@ -20,13 +20,9 @@
   ansible.builtin.rpm_key:
     state: present
     key: https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
-
-
-- name: Add repository
-  ansible.builtin.yum_repository:
-    name: jenkins
-    description: "Jenkins repo"
-    baseurl: https://pkg.jenkins.io/redhat-stable/jenkins.repo
+- name: Add repo
+  shell: |
+     curl -o /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
 
 - name: 'Install dependecies'
   yum:
@@ -34,10 +30,7 @@
       - curl
       - daemon
       - net-tools
-      - openjdk-11-jre-headless
-      - openjdk-11-jdk-headless
-      - openjdk-11-jre
-      - openjdk-11-jdk
+      - java-17-amazon-corretto
     state: present
     update_cache: true
 
