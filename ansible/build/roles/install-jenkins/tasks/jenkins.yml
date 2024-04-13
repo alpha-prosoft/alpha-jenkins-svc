@@ -145,7 +145,7 @@
 
 - name: 'Wait for Jenkins to start up'
   uri:
-    url: http://localhost:8080
+    url: http://127.0.0.1:8080
     status_code: 200
     timeout: 5
   register: jenkins_service_status
@@ -200,7 +200,7 @@
 
 - name: 'Wait for Jenkins to start up 2'
   uri:
-    url: http://localhost:8080
+    url: http://127.0.0.1:8080
     status_code: 200
     timeout: 5
   register: jenkins_service_status
