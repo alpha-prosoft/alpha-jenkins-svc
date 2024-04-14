@@ -91,7 +91,7 @@ jenkins:
         value: "${Region}"
   clouds:
   - amazonEC2:
-      cloudName: "EC2 Builder DEV"
+      name: "EC2 Builder DEV"
       region: "${Region}"
       sshKeysCredentialsId: "gerrit-ssh"
       templates:
@@ -146,7 +146,7 @@ jenkins:
 
       useInstanceProfileForCredentials: true
   - amazonEC2:
-      cloudName: "EC2 Builder Prod"
+      name: "EC2 Builder Prod"
       region: "${Region}"
       sshKeysCredentialsId: "gerrit-ssh"
       templates:
