@@ -186,7 +186,7 @@
 
 - name: 'Wait for Jenkins to start up 2'
   uri:
-    url: http://127.0.0.1:8082
+    url: http://127.0.0.1:8080
     status_code: 200
     timeout: 5
     url_username: 'admin'
@@ -212,7 +212,7 @@
      mkdir -p /etc/systemd/system/jenkins.service.d
      touch $ov
      
-     echo '[Unit]' >> $ov 
+     echo '[Unit]' > $ov 
      echo 'Description=My Company Jenkins Controller' >> $ov 
      echo "" >> $ov 
      echo '[Service]' >> $ov 
