@@ -179,6 +179,30 @@
       cp /var/lib/jenkins/plugins/*.jpi /opt/jenkins/plugins/ || echo "No filed found"
       cp /var/lib/jenkins/plugins/*.hpi /opt/jenkins/plugins/ || echo "No filed found"
 
+- name: 'Start jenkins'
+  service:
+    name: jenkins
+    state: started
+
+- name: 'Wait for Jenkins to start up 2'
+  uri:
+    url: http://127.0.0.1:8082
+    status_code: 200
+    timeout: 5
+    url_username: 'admin'
+    url_password: "{{ jenkins_admin_password }}"
+  register: jenkins_service_status
+  retries: 100
+  delay: 10
+  until: >
+     'status' in jenkins_service_status and
+     jenkins_service_status['status'] == 200
+
+- name: 'Stop jenkins'
+  service:
+    name: jenkins
+    state: stopped
+    
 - name: 'Add jekins configuration env variable'
   shell: |
      set -e
@@ -194,108 +218,11 @@
      echo '[Service]' >> $ov 
      echo 'Environment="CASC_JENKINS_CONFIG=/etc/jenkins/jenkins-configuration.yml"' >> $ov 
      echo 'Environment="JENKINS_PORT=8082"' >> $ov
-     echo 'Environment="JAVA_TOOL_OPTIONS=-Djenkins.install.runSetupWizard=false"' >> $ov
-     
+     echo 'Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"' >> $ov
+    
      sed -i 's#<installStateName>NEW.*#<installStateName>RUNNING<\/installStateName>#g' /var/lib/jenkins/config.xml
      
      systemctl daemon-reload
-     
-- name: 'Add jenkins default config to test strtup'
-  shell: |
-      cat <<EOF > /etc/jenkins/jenkins-configuration.yml
-      jenkins:
-        agentProtocols:
-        - "JNLP4-connect"
-        - "Ping"
-        crumbIssuer:
-          standard:
-            excludeClientIPFromCrumb: false
-        disableRememberMe: false
-        labelAtoms:
-        - name: "built-in"
-        markupFormatter: "plainText"
-        mode: NORMAL
-        myViewsTabBar: "standard"
-        nodeMonitors:
-        - "architecture"
-        - "clock"
-        - diskSpace:
-            freeSpaceThreshold: "1GiB"
-            freeSpaceWarningThreshold: "2GiB"
-        - "swapSpace"
-        - tmpSpace:
-            freeSpaceThreshold: "1GiB"
-            freeSpaceWarningThreshold: "2GiB"
-        - "responseTime"
-        numExecutors: 2
-        primaryView:
-          all:
-            name: "all"
-        projectNamingStrategy: "standard"
-        quietPeriod: 5
-        remotingSecurity:
-          enabled: true
-        scmCheckoutRetryCount: 0
-        slaveAgentPort: 50000
-        updateCenter:
-          sites:
-          - id: "default"
-            url: "https://updates.jenkins.io/update-center.json"
-        views:
-        - all:
-            name: "all"
-        viewsTabBar: "standard"
-      appearance:
-        prism:
-          theme: PRISM
-      security:
-        apiToken:
-          creationOfLegacyTokenEnabled: false
-          tokenGenerationOnCreationEnabled: false
-          usageStatisticsEnabled: true
-      unclassified:
-        buildDiscarders:
-          configuredBuildDiscarders:
-          - "jobBuildDiscarder"
-        fingerprints:
-          fingerprintCleanupDisabled: false
-          storage: "file"
-        location:
-          adminAddress: "address not configured yet <nobody@nowhere>"
-          url: "http://127.0.0.1:8082/"
-        pollSCM:
-          pollingThreadCount: 10
-      tool:
-        mavenGlobalConfig:
-          globalSettingsProvider: "standard"
-          settingsProvider: "standard"     
-      EOF
-      
-- name: 'Start jenkins'
-  service:
-    name: jenkins
-    state: started
-
-- name: 'Wait for Jenkins to start up 2'
-  uri:
-    url: http://127.0.0.1:8082
-    status_code: 200
-    timeout: 5
-  register: jenkins_service_status
-  retries: 100
-  delay: 10
-  until: >
-     'status' in jenkins_service_status and
-     jenkins_service_status['status'] == 200
-
-- name: 'Stop jenkins'
-  service:
-    name: jenkins
-    state: stopped
-
-- name: 'Remote temp config'
-  shell: |
-    rm -rf /etc/jenkins/jenkins-configuration.yml
   
 - shell: |
     systemctl status jenkins.service
