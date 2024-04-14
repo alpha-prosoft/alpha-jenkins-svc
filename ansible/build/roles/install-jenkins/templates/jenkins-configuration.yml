@@ -271,7 +271,7 @@ unclassified:
     apiRateLimitChecker: ThrottleForNormalize
   gitHubPluginConfig:
     hookUrl: "https://${ServiceAlias}.${PrivateHostedZoneName}/github-webhook/"
-  gitSCM:
+  scmGit:
     createAccountBasedOnEmail: false
     showEntireCommitSummaryInChanges: false
     useExistingAccountWithSameEmail: false
