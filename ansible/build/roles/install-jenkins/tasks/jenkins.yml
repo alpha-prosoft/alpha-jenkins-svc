@@ -194,7 +194,7 @@
      echo '[Service]' >> $ov 
      echo 'Environment="CASC_JENKINS_CONFIG=/etc/jenkins/jenkins-configuration.yml"' >> $ov 
      echo 'Environment="JENKINS_PORT=8082"' >> $ov
-     echo 'Environment="JAVA_ARGS=-Djenkins.install.runSetupWizard=false"' >> $ov
+     echo 'Environment="JAVA_TOOL_OPTIONS=-Djenkins.install.runSetupWizard=false"' >> $ov
      
      sed -i 's#<installStateName>NEW.*#<installStateName>RUNNING<\/installStateName>#g' /var/lib/jenkins/config.xml
      
@@ -282,8 +282,8 @@
     status_code: 200
     timeout: 5
   register: jenkins_service_status
-  retries: 60
-  delay: 5
+  retries: 100
+  delay: 10
   until: >
      'status' in jenkins_service_status and
      jenkins_service_status['status'] == 200
