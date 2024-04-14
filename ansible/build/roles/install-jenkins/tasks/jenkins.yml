@@ -176,6 +176,7 @@
 
 - name: 'Add jekins configuration env variable'
   shell: |
+     set -e
      echo "CASC_JENKINS_CONFIG=/etc/jenkins/jenkins-configuration.yml" > /etc/environment
      
      ov="/etc/systemd/system/jenkins.service.d/override.conf"
@@ -265,9 +266,6 @@
           settingsProvider: "standard"     
       EOF
       
-- shell: |
-    rm -rf /etc/jenkins/jenkins-configuration.yml
-
 - name: 'Start jenkins'
   service:
     name: jenkins
