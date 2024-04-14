@@ -137,6 +137,11 @@
   - name: docker-workflow
   - name: pipeline-graph-view
 
+- name: 'Stop jenkins'
+  service:
+    name: jenkins
+    state: stopped
+    
 - name: 'Prepare update directory to avoid failure'
   file:
     path: "/etc/jenkins"
