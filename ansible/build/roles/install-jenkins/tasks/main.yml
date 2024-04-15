@@ -70,7 +70,11 @@
 
     systemctl start docker
     
-    docker search  alphaprosoft | awk '{printf $1"\n"}'  | grep -v "NAME" | xargs -I {} docker pull {}:latest
+    docker search  alphaprosoft |\
+         awk '{printf $1"\n"}'  |\
+         grep -v "NAME" |\
+         xargs -I {} docker pull {}:latest ||\
+         echo "Missing image"
   
 - debug: 
     var: docker_out
