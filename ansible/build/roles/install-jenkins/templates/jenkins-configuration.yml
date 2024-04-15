@@ -121,6 +121,10 @@ jenkins:
         securityGroups: "${InstanceSecurityGroupId}"
         stopOnTerminate: false
         subnetId: "${PrivateSubnet1A} ${PrivateSubnet2A}"
+        metadataEndpointEnabled: true
+        metadataHopsLimit: 5
+        metadataSupported: true
+        metadataTokensRequired: true
         t2Unlimited: false
         type: C6i8xlarge
         useEphemeralDevices: false
@@ -177,6 +181,10 @@ jenkins:
         securityGroups: "${InstanceSecurityGroupId}"
         stopOnTerminate: false
         subnetId: "${PrivateSubnet1A} ${PrivateSubnet2A}"
+        metadataEndpointEnabled: true
+        metadataHopsLimit: 5
+        metadataSupported: true
+        metadataTokensRequired: true
         t2Unlimited: false
         type: C6i4xlarge
         useEphemeralDevices: false
