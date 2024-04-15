@@ -41,3 +41,11 @@
     curl -L -o gh.rpm https://github.com/cli/cli/releases/download/v2.15.0/gh_2.15.0_linux_386.rpm
     rpm -i gh.rpm
 
+- name: 'Cache all docker images'
+  args: 
+    executable: /bin/bash
+  shell: |
+    set -e
+    
+    docker search  alphaprosoft | awk '{printf $1"\n"}'  | grep -v "NAME" | xargs -I {} docker pull {}:latest
+  
