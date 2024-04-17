@@ -116,7 +116,7 @@ jenkins:
         minimumNumberOfSpareInstances: 0
         mode: NORMAL
         monitoring: false
-        numExecutors: 3
+        numExecutors: 2
         remoteAdmin: "jenkins"
         securityGroups: "${InstanceSecurityGroupId}"
         stopOnTerminate: false
