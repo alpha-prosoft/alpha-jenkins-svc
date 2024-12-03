@@ -34,6 +34,7 @@ docker build --progress=plain \
 	     --build-arg BuildId="${BUILD_ID}" \
 	     --build-arg AWS_REGION="${AWS_DEFAULT_REGION}" \
       	     --build-arg AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION}" \
+	     --build-arg DOCKER_REGISTRY_URL="${DOCKER_REGISTRY_URL}" \
 	     -t alpha-jenkins-svc:b${BUILD_ID} \
 	     -f Dockerfile .
 
