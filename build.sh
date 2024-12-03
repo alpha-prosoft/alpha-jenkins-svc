@@ -42,6 +42,7 @@ docker build --progress=plain \
 	     --build-arg AWS_REGION="${AWS_DEFAULT_REGION}" \
       	     --build-arg AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION}" \
 	     --build-arg DOCKER_REGISTRY_URL="${DOCKER_REGISTRY_URL}" \
+             -v /etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors \
 	     -t alpha-jenkins-svc:b${BUILD_ID} \
 	     -f Dockerfile .
 
