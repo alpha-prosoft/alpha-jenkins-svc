@@ -32,7 +32,8 @@ fi
 export BUILD_ID=$((BUILD_ID+1))
 echo "New build id: $BUILD_ID"
 
-
+mkdir certs
+cp /etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors/* certs/
 
 docker build --progress=plain \
              --no-cache \
@@ -42,7 +43,6 @@ docker build --progress=plain \
 	     --build-arg AWS_REGION="${AWS_DEFAULT_REGION}" \
       	     --build-arg AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION}" \
 	     --build-arg DOCKER_REGISTRY_URL="${DOCKER_REGISTRY_URL}" \
-             -v /etc/pki/ca-trust/source/anchors:/etc/pki/ca-trust/source/anchors \
 	     -t alpha-jenkins-svc:b${BUILD_ID} \
 	     -f Dockerfile .
 
