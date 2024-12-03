@@ -2,12 +2,19 @@
 
 set -eou pipefail
 
+SESSION_TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+
+ROLE_NAME=$(curl -H "X-aws-ec2-metadata-token: $SESSION_TOKEN" http://169.254.169.254/latest/meta-data/iam/security-credentials/)
+CREDENTIALS=$(curl -H "X-aws-ec2-metadata-token: $SESSION_TOKEN" http://169.254.169.254/latest/meta-data/iam/security-credentials/$ROLE_NAME)
+
+export AWS_DEFAULT_REGION=$(curl -s -H "X-aws-ec2-metadata-token: $SESSION_TOKEN" \
+             http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
+export AWS_ACCESS_KEY_ID=$(echo $CREDENTIALS | jq -r '.AccessKeyId')
+export AWS_SECRET_ACCESS_KEY=$(echo $CREDENTIALS | jq -r '.SecretAccessKey')
+export AWS_SESSION_TOKEN=$(echo $CREDENTIALS | jq -r '.Token')
 export TARGET_ACCOUNT_ID="$(aws sts get-caller-identity | jq -r '.Account')"
 
 export DOCKER_BUILDKIT=1
-
-SESSION_TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
-export AWS_DEFAULT_REGION=$(curl -s -H "X-aws-ec2-metadata-token: $SESSION_TOKEN" http://169.254.169.254/latest/dynamic/instance-identity/document | jq -r .region)
 
 export LATEST_IMAGE="$(aws ec2 describe-images \
                           --owners self --no-paginate  \
