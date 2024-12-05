@@ -16,12 +16,6 @@
 - name: 'Print release'
   shell: 'uname -r'
   
-- name: Add jenkins key
-  environment: '{{ params }}'
-  ansible.builtin.rpm_key:
-    state: present
-    key: https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
-
 - name: 'Install dependecies'
   environment: '{{ params }}'
   yum:
@@ -35,7 +29,9 @@
   environment: '{{ params }}'
   shell: |
      set -euo pipefail
-     curl -o /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+     yum update –y
+     curl -L -o /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+     rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
      yum upgrade -y
      yum install jenkins -y
   register: install_result
