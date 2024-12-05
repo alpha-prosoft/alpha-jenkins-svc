@@ -17,6 +17,7 @@
   shell: 'uname -r'
   
 - name: Add jenkins key
+  environment: '{{ params }}'
   ansible.builtin.rpm_key:
     state: present
     key: https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
@@ -25,6 +26,7 @@
      curl -o /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
 
 - name: 'Install dependecies'
+  environment: '{{ params }}'
   yum:
     name:
       - net-tools
@@ -34,6 +36,7 @@
 
 
 - name: 'Install jenkins'
+  environment: '{{ params }}'
   yum:
     name:
       - jenkins
@@ -51,6 +54,7 @@
     enabled: no
 
 - name: 'Ensure enkins is running'
+  environment: '{{ params }}'
   command: 'curl -D - -s --max-time 5 http://127.0.0.1:8080/cli/'
   register: result
   until: '(result.stdout.find("403 Forbidden") != -1) or (result.stdout.find("200 OK") != -1) and (result.stdout.find("Please wait while") == -1)'
@@ -78,6 +82,7 @@
     group: jenkins
 
 - name: 'Downloads plugins updated'
+  environment: '{{ params }}'
   get_url:
     url: "https://updates.jenkins.io/update-center.json"
     dest: "/var/lib/jenkins/updates/default.json"
