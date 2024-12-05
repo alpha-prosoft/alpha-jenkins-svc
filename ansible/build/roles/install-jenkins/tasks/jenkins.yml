@@ -21,12 +21,6 @@
   ansible.builtin.rpm_key:
     state: present
     key: https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
-    
-- name: Add repo
-  environment: '{{ params }}'
-  shell: |
-     curl -o /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
-     yum upgrade -y
 
 - name: 'Install dependecies'
   environment: '{{ params }}'
@@ -37,17 +31,17 @@
     state: present
     update_cache: true
 
-- name: 'Install jenkins'
+- name: Add repo
   environment: '{{ params }}'
-  yum:
-    name:
-      - jenkins
-    state: present
-    update_cache: true
-  register: jenkins_result
-  until: jenkins_result is success
+  shell: |
+     set -euo pipefail
+     curl -o /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+     yum upgrade -y
+     yum install jenkins -y
+  register: install_result
+  until: "install_result is not failed"
   retries: 3
-  delay: 3
+  delay: 10
 
 - name: 'Start jenkins to generate inital password and instal plugins. We will start it manually later from userdata'
   service: 
