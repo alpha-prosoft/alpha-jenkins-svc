@@ -30,9 +30,9 @@
   shell: |
      set -euo pipefail
      yum update –y
-     curl -L -o /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
      rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
-     yum upgrade -y
+     curl -L -o /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+     yum upgrade
      yum install jenkins -y
   register: install_result
   until: "install_result is not failed"
