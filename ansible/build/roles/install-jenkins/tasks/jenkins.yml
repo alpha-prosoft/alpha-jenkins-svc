@@ -29,7 +29,6 @@
   environment: '{{ params }}'
   shell: |
      set -euo pipefail
-     yum update –y
      rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
      curl -L -o /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
      yum install jenkins -y
