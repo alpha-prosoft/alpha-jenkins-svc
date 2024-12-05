@@ -26,16 +26,16 @@
   environment: '{{ params }}'
   shell: |
      curl -o /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+     yum upgrade -y
 
 - name: 'Install dependecies'
   environment: '{{ params }}'
   yum:
     name:
       - net-tools
-      - java-17-amazon-corretto
+      - java-21-amazon-corretto
     state: present
     update_cache: true
-
 
 - name: 'Install jenkins'
   environment: '{{ params }}'
