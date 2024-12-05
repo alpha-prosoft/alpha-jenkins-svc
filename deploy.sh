@@ -194,6 +194,7 @@ echo "Executing ansible deployment"
 export ANSIBLE_FORCE_COLOR=true
 
 ansible-playbook \
+         -v \
          -i $work_dir/inventory \
          --extra-vars "BuildId=${BUILD_ID}" \
          -${ANSIBLE_LOG_LEVEL:-vvv} \
