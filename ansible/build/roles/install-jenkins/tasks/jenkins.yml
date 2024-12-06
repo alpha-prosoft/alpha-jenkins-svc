@@ -83,7 +83,7 @@
 
      echo "Configuring service"
      echo '[Service]' >> $ov 
-     echo 'Environment="JAVA_OPTS='${PROXY_CONF}' -Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"' >> $ov
+     echo 'Environment="JAVA_OPTS='${PROXY_CONF}' -Djava.awt.headless=true"' >> $ov
 
      echo "Reloading daemon"
      systemctl daemon-reload
@@ -97,7 +97,7 @@
 
 - name: 'Ensure enkins is running'
   environment: '{{ params }}'
-  command: 'curl -D - -s --max-time 5 http://127.0.0.1:8080/cli/'
+  command: 'curl -o /dev/null -D - -s --max-time 5 http://127.0.0.1:8080/cli/'
   register: result
   until: '(result.stdout.find("403 Forbidden") != -1) or (result.stdout.find("200 OK") != -1) and (result.stdout.find("Please wait while") == -1)'
   retries: "20"
