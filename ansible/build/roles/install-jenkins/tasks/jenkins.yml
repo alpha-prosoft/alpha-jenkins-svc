@@ -67,8 +67,10 @@
        echo "Proxy port: ${port}"
 
        export PROXY_CONF="-Dhttp.proxyHost=${host} -Dhttp.proxyPort=${port}"
+       export PROXY_CONF="$PROXY_CONF -Dhttps.proxyHost=${host} -Dhttps.proxyPort=${port}"
        export PROXY_CONF="$PROXY_CONF -Dhttp.nonProxyHosts=\"${no_proxy}\""
        echo "Proxy conf: ${PROXY_CONF}"
+
      fi
 
      echo "Configuring basing overrides for jenkins before first start"
