@@ -119,7 +119,7 @@
      echo 'Description=My Company Jenkins Controller' >> $ov 
      echo "" >> $ov 
      echo '[Service]' >> $ov 
-     echo 'Environment="JAVA_OPTS=${PROXY_CONF} -Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"' >> $ov
+     echo 'Environment="JAVA_OPTS='${PROXY_CONF}' -Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"' >> $ov
      
      systemctl daemon-reload
      systemctl restart jenkins
