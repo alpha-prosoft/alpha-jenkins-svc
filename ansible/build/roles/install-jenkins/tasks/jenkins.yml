@@ -94,6 +94,7 @@
     regexp: "1d;$d"
     
 - name: 'Configure jenkins with proxy'
+  environment: '{{ params }}'
   shell: |
      set -e
 
