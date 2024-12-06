@@ -50,11 +50,10 @@
      cert_dir=/opt/cert
      for file in $(ls $cert_dir/*.crt); do
         echo "Adding cert: $file"
-        keytool -import -trustcacerts -noprompt \
+        keytool -import -trustcacerts -noprompt -cacerts \
                -storepass changeit \
                -alias $(basename $file) \
-               -file $file \
-               -keystore /usr/lib/jvm/java-21-amazon-corretto.x86_64/lib/security/cacerts;
+               -file $file;
      done
      echo "Done adding certifictes"
 
