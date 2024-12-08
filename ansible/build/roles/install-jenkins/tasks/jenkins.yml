@@ -163,9 +163,14 @@
     path: "/var/lib/jenkins/updates/default.json"
     regexp: "1d;$d"
 
-
-
-- include_tasks: plugin.yml
+- shell: |
+    set -euo pipefail
+    cd $(mktemp -d)
+    curl 127.0.0.1:8080//jnlpJars/jenkins-cli.jar --user 'admin:{{ jenkins_admin_password }} -v -L -o  jenkins-cli.jar
+    java -jar ~/jenkins-cli.jar -s http://127.0.0.1:8080 -auth 'admin:{{ jenkins_admin_password }} install-plugin {{ item.name }}
+  until: "install_result is not failed"
+  retries: 3
+  delay: 10
   with_items: 
   - name: credentials
   - name: blueocean
