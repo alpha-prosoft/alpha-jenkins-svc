@@ -33,12 +33,12 @@
 - include_tasks: jenkins.yml
 
 - name: 'Install github cli'
+  environment: '{{ params }}'
   args: 
     executable: /bin/bash
   shell: |
     set -e
-    
-    curl -L -o gh.rpm https://github.com/cli/cli/releases/download/v2.15.0/gh_2.15.0_linux_386.rpm
+    curl -L -o gh.rpm https://github.com/cli/cli/releases/download/v2.63.2/gh_2.63.2_linux_amd64.rpm    
     rpm -i gh.rpm
 
 - name: 'Startr docker'
