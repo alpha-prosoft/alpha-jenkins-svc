@@ -40,6 +40,11 @@
   retries: 3
   delay: 10
 
+- name: 'Copy hudson.model.UpdateCenter.xml config'
+  copy: 
+    src: 'hudson.model.UpdateCenter.xml'
+    dest: '/tmp/hudson.model.UpdateCenter.xml'
+
 - name: 'Configure jenkins with proxy'
   timeout: 30
   environment: '{{ params }}'
@@ -71,19 +76,7 @@
        export PROXY_CONF="$PROXY_CONF -Dhttp.nonProxyHosts=\"${no_proxy}\""
        echo "Proxy conf: ${PROXY_CONF}"
 
-       cat <<EOF > $JENKINS_HOME/hudson.model.UpdateCenter.xml
-       <hudson.model.UpdateCenter>
-          <site>
-            <id>default</id>
-            <url>https://updates.jenkins.io/update-center.json</url>
-          </site>
-          <proxy>
-            <name>${host}</name>
-            <port>${port}</port>
-            <noProxyHost>${no_proxy}</noProxyHost>
-          </proxy>
-       </hudson.model.UpdateCenter>
-       EOF
+       envsubst < /tmp/hudson.model.UpdateCenter.xml > /var/lib/jenkins/hudson.model.UpdateCenter.xml
      fi
 
      echo "Configuring basing overrides for jenkins before first start"
