@@ -127,7 +127,7 @@
   environment: '{{ params }}'
   shell: |
      set -euo pipefail
-     curl 127.0.0.1:8080//jnlpJars/jenkins-cli.jar --user 'admin:{{ inital_admin_password }}' -v -L -o  jenkins-cli.jar
+     curl 127.0.0.1:8080//jnlpJars/jenkins-cli.jar --user 'admin:{{ jenkins_admin_password }}' -v -L -o  jenkins-cli.jar
 
      if [[ -n "${http_proxy}" ]]; then 
        echo "Proxy exists"
@@ -138,7 +138,7 @@
        port="${proxy_url%%:*}"
        echo "Proxy port: ${port}"
 
-       java -jar jenkins-cli.jar -s http://127.0.0.1:8080 -auth admin:{{ inital_admin_password }} groovy = <<EOF
+       java -jar jenkins-cli.jar -s http://127.0.0.1:8080 -auth admin:{{ jenkins_admin_password }} groovy = <<EOF
        import jenkins.model.*
        def instance = Jenkins.getInstance()
        def proxy = new hudson.ProxyConfiguration("proxy.r-services.at", 57165)
@@ -148,7 +148,7 @@
      EOF
      fi
     
-     java -jar jenkins-cli.jar -s http://your-jenkins-url -auth your-username:your-api-token groovy = <<EOF
+     java -jar jenkins-cli.jar -s http://127.0.0.1:8080 -auth admin:{{ jenkins_admin_password }} groovy = <<EOF
      import jenkins.model.*
      import hudson.model.UpdateCenter
      def updateCenter = Jenkins.getInstance().getUpdateCenter()
