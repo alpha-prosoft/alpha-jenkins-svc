@@ -135,7 +135,7 @@
   environment: '{{ params }}'
   shell: |
      set -euo pipefail
-     curl 127.0.0.1:8080//jnlpJars/jenkins-cli.jar --user 'admin:{{ jenkins_admin_password }}' -v -L -o  ~/jenkins-cli.jar
+     curl 127.0.0.1:8080/jnlpJars/jenkins-cli.jar --user 'admin:{{ jenkins_admin_password }}' -v -L -o  ~/jenkins-cli.jar
 
 - name: 'Prepare update directory to avoid failure'
   file:
@@ -163,11 +163,12 @@
     path: "/var/lib/jenkins/updates/default.json"
     regexp: "1d;$d"
 
-- shell: |
+- name: "Install plugin"
+  environment: '{{ params }}'
+  shell: |
     set -euo pipefail
-    cd $(mktemp -d)
-    curl 127.0.0.1:8080//jnlpJars/jenkins-cli.jar --user 'admin:{{ jenkins_admin_password }} -v -L -o  jenkins-cli.jar
     java -jar ~/jenkins-cli.jar -s http://127.0.0.1:8080 -auth 'admin:{{ jenkins_admin_password }} install-plugin {{ item.name }}
+  register: install_result
   until: "install_result is not failed"
   retries: 3
   delay: 10
