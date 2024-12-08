@@ -77,6 +77,7 @@
        echo "Proxy conf: ${PROXY_CONF}"
        
        echo "" > /var/lib/jenkins/proxy.xml
+       chown jenkins:jenkin /var/lib/jenkins/proxy.xml
        echo "<?xml version='1.1' encoding='UTF-8'?>" >> /var/lib/jenkins/proxy.xml
        echo "  <proxy>" >> /var/lib/jenkins/proxy.xml
        echo "  <name>${host}</name>" >> /var/lib/jenkins/proxy.xml
