@@ -241,14 +241,7 @@
     group: jenkins
     mode: '0644'
 
-- name: 'Add job to download environment configuration'
-  cron:
-    name: "check dirs"
-    minute: "0"
-    hour: "5,2"
-    job: "ls -alh > /dev/null"
-
-- name: 'Copy plugins'
+- name: 'Copy plugins to be used for update on existin instance. Sinde mount will be places in /var/lib/jenkins'
   shell: |
       set -e
       mkdir -p /opt/jenkins/plugins/
@@ -290,8 +283,10 @@
      
      echo 'Environment="CASC_JENKINS_CONFIG=/etc/jenkins/jenkins-configuration.yml"' >> $ov 
      echo 'Environment="JENKINS_PORT=8082"' >> $ov
+
+     sed -i '/JAVA_OPTS/d' $ov
      echo 'Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"' >> $ov
-    
+     
      sed -i 's#<installStateName>NEW.*#<installStateName>RUNNING<\/installStateName>#g' /var/lib/jenkins/config.xml
      
      systemctl daemon-reload
