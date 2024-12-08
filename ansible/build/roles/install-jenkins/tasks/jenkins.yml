@@ -76,6 +76,7 @@
        export PROXY_CONF="$PROXY_CONF -Dhttp.nonProxyHosts=\"${no_proxy}\""
        echo "Proxy conf: ${PROXY_CONF}"
 
+       cp /var/lib/jenkins/hudson.model.UpdateCenter.xml /var/lib/jenkins/hudson.model.UpdateCenter.xml.back
        envsubst < /tmp/hudson.model.UpdateCenter.xml > /var/lib/jenkins/hudson.model.UpdateCenter.xml
      fi
 
@@ -119,6 +120,13 @@
 - name: 'Read password'
   command: 'cat /var/lib/jenkins/secrets/initialAdminPassword'
   register: inital_admin_password
+
+- name: 'Configure jenkins proxy with CLI'
+  timeout: 30
+  environment: '{{ params }}'
+  shell: |
+     set -euo pipefail
+     curl 127.0.0.1:8080//jnlpJars/jenkins-cli.jar --user 'admin:{{ inital_admin_password }}' -v -L -o  jenkins-cli.jar
 
 - name: 'Set admin password to facts' 
   set_fact:
