@@ -1,1 +1,11 @@
-
+<hudson.model.UpdateCenter>
+  <site>
+    <id>default</id>
+    <url>https://updates.jenkins.io/update-center.json</url>
+  </site>
+  <proxy>
+    <name>${host}</name>
+    <port>${port}</port>
+    <noProxyHost>${no_proxy}</noProxyHost>
+  </proxy>
+</hudson.model.UpdateCenter>
