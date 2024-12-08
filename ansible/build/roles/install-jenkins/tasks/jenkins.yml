@@ -75,9 +75,6 @@
        export PROXY_CONF="$PROXY_CONF -Dhttps.proxyHost=${host} -Dhttps.proxyPort=${port}"
        export PROXY_CONF="$PROXY_CONF -Dhttp.nonProxyHosts=\"${no_proxy}\""
        echo "Proxy conf: ${PROXY_CONF}"
-
-       cp /var/lib/jenkins/hudson.model.UpdateCenter.xml /var/lib/jenkins/hudson.model.UpdateCenter.xml.back
-       envsubst < /tmp/hudson.model.UpdateCenter.xml > /var/lib/jenkins/hudson.model.UpdateCenter.xml
      fi
 
      echo "Configuring basing overrides for jenkins before first start"
@@ -127,6 +124,33 @@
   shell: |
      set -euo pipefail
      curl 127.0.0.1:8080//jnlpJars/jenkins-cli.jar --user 'admin:{{ inital_admin_password }}' -v -L -o  jenkins-cli.jar
+
+     if [[ -n "${http_proxy}" ]]; then 
+       echo "Proxy exists"
+       proxy_url="${http_proxy##*//}"
+       echo "Proxy url: ${proxy_url}"
+       host="${proxy_url##*:}"
+       echo "Proxy host: ${host}"
+       port="${proxy_url%%:*}"
+       echo "Proxy port: ${port}"
+
+       java -jar jenkins-cli.jar -s http://127.0.0.1:8080 -auth admin:{{ inital_admin_password }} groovy = <<EOF
+       import jenkins.model.*
+       def instance = Jenkins.getInstance()
+       def proxy = new hudson.ProxyConfiguration("proxy.r-services.at", 57165)
+       instance.proxy = proxy
+       instance.save()
+       println("Proxy updated.")
+     EOF
+     fi
+    
+     java -jar jenkins-cli.jar -s http://your-jenkins-url -auth your-username:your-api-token groovy = <<EOF
+     import jenkins.model.*
+     import hudson.model.UpdateCenter
+     def updateCenter = Jenkins.getInstance().getUpdateCenter()
+     updateCenter.updateAllSites()
+     println("Plugin list update triggered.")
+     EOF
 
 - name: 'Set admin password to facts' 
   set_fact:
