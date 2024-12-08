@@ -76,10 +76,10 @@
        export PROXY_CONF="$PROXY_CONF -Dhttp.nonProxyHosts=\"${no_proxy}\""
        echo "Proxy conf: ${PROXY_CONF}"
        
-       echo "" > /var/lib/jenkins/proxy.xml
+       rouch /var/lib/jenkins/proxy.xml
        chown jenkins:jenkins /var/lib/jenkins/proxy.xml
        echo "<?xml version='1.1' encoding='UTF-8'?>" >> /var/lib/jenkins/proxy.xml
-       echo "  <proxy>" >> /var/lib/jenkins/proxy.xml
+       echo "<proxy>" >> /var/lib/jenkins/proxy.xml
        echo "  <name>${host}</name>" >> /var/lib/jenkins/proxy.xml
        echo "  <port>${port}</port>" >> /var/lib/jenkins/proxy.xml
        echo "</proxy>" >> /var/lib/jenkins/proxy.xml
