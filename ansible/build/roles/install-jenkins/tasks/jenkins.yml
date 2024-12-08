@@ -117,6 +117,10 @@
 - name: 'Read password'
   command: 'cat /var/lib/jenkins/secrets/initialAdminPassword'
   register: inital_admin_password
+  
+- name: 'Set admin password to facts' 
+  set_fact:
+    jenkins_admin_password: '{{inital_admin_password.stdout }}'
 
 - name: 'Configure jenkins proxy with CLI'
   timeout: 30
@@ -152,9 +156,6 @@
      println("Plugin list update triggered.")
      EOF
 
-- name: 'Set admin password to facts' 
-  set_fact:
-    jenkins_admin_password: '{{inital_admin_password.stdout }}'
 
 - name: 'Prepare update directory to avoid failure'
   file:
