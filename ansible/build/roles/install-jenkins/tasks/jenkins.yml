@@ -71,6 +71,19 @@
        export PROXY_CONF="$PROXY_CONF -Dhttp.nonProxyHosts=\"${no_proxy}\""
        echo "Proxy conf: ${PROXY_CONF}"
 
+       cat <<EOF > $JENKINS_HOME/hudson.model.UpdateCenter.xml
+       <hudson.model.UpdateCenter>
+          <site>
+            <id>default</id>
+            <url>https://updates.jenkins.io/update-center.json</url>
+          </site>
+          <proxy>
+            <name>${host}</name>
+            <port>${port}</port>
+            <noProxyHost>${no_proxy}</noProxyHost>
+          </proxy>
+       </hudson.model.UpdateCenter>
+       EOF
      fi
 
      echo "Configuring basing overrides for jenkins before first start"
