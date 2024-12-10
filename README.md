@@ -4,6 +4,13 @@
 - Dont forget to setup RouteTables
 
 
+## Build and run 
+
+```
+./build-and-deploy.sh "jenkins" "PIPELINE"
+
+```
+
 ## Secrets
 
 Setup assumes follwing secrets in AWS secret manager
