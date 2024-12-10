@@ -6,8 +6,10 @@
 
 ## Build and run 
 
+Replace "alpha" with your own project name and "PIPELINE" with your preffered environment name
+
 ```
-./build-and-deploy.sh "jenkins" "PIPELINE"
+./build-and-deploy.sh "alpha"
 
 ```
 

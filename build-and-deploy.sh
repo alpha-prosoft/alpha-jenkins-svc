@@ -3,7 +3,7 @@
 set -euo pipefail 
 
 export PROJECT_NAME=${1}
-export ENV_NAME_UPPER=${2}
+export ENV_NAME_UPPER=${2:-PIPELINE}
 
 target_dir=${PWD}/target
 mkdir -p $target_dir 
