@@ -15,79 +15,52 @@ Replace "alpha" with your own project name and "PIPELINE" with your preffered en
 
 ## Secrets
 
-Setup assumes follwing secrets in AWS secret manager
+Setup assumes secret in AWS secret manager under `/${EnvironmentNameLower}/jenkins/config
 
 
 #Credentials for jira
-```
-/pipeline/jenkins/jira-http
-
+```json
 {
-  "username": "***",
-  "password": "***",
-  "url": "https://***"
+	"credentials": {
+		"jira": {
+			"username": "***",
+			"password": "***",
+			"url": "https://***"
+		},
+		"github": {
+			"username": "***",
+			"password": "***",
+			"url": "https://***"
+		},
+		"artifact-deploy-http": {
+			"username": "***",
+			"password": "***",
+			"url": "https://***",
+			"org": "com.example"
+		}
+	},
+	"artifact-deploy-dev-http": {
+		"username": "***",
+		"password": "***",
+		"url": "https://***",
+		"org": "com.example"
+	},
+	"artifact-deploy-public-http": {
+		"username": "***",
+		"password": "***",
+		"url": "https://***",
+		"org": "com.example"
+	},
+	"docker-http": {
+		"username": "***",
+		"password": "***",
+		"url": "***",
+		"push-url": "***",
+		"org": "***"
+	}
 }
 ```
 
-#Credentials for github 
-```
-/pipeline/jenkins/github-http
-
-{
-  "username": "***",
-  "password": "***",
-  "url": "https://***"
-}
-```
-
-
-#Credentialsto deploy artifacts
-```
-/pipeline/jenkins/artifact-deploy-http
-
-{
-  "username": "***",
-  "password": "***",
-  "url": "https://***",
-  "org": "com.example"
-}
-
-```
-
-#Credentals to deploy non productive builds of artifacts (i.e. Pull request builds)
-```
-/pipeline/jenkins/artifact-deploy-dev-http
-{
-  "username": "***",
-  "password": "***",
-  "url": "https://***",
-  "org": "com.example"
-}
-```
-
-#Credentals to deploy public releases
-```
-/pipeline/jenkins/artifact-deploy-public-http
-{
-  "username": "***",
-  "password": "***",
-  "url": "https://***",
-  "org": "com.example"
-}
-```
-
-
-#Docker setup. `url` and `push-url` can be same value. 
-```
-/pipeline/jenkins/docker-http
-{
-  "username": "***",
-  "password": "***",
-  "url": "***",
-  "push-url": "***",
-  "org": "***"
-}
-```
 
 #Initial instance setup
 ```
@@ -97,7 +70,3 @@ sudo echo "{ "features": { "buildkit": true } }" > /etc/docker/daemon.json
 sudo systemctl restart docker
 ```
 
-# Build and deploy
-```
-./local-deploy.sh
-```
