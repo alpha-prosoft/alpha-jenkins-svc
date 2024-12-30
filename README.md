@@ -37,26 +37,26 @@ Setup assumes secret in AWS secret manager under `/${EnvironmentNameLower}/jenki
 			"password": "***",
 			"url": "https://***",
 			"org": "com.example"
+		},
+		"artifact-deploy-dev-http": {
+			"username": "***",
+			"password": "***",
+			"url": "https://***",
+			"org": "com.example"
+		},
+		"artifact-deploy-public-http": {
+			"username": "***",
+			"password": "***",
+			"url": "https://***",
+			"org": "com.example"
+		},
+		"docker-http": {
+			"username": "***",
+			"password": "***",
+			"url": "***",
+			"push-url": "***",
+			"org": "***"
 		}
-	},
-	"artifact-deploy-dev-http": {
-		"username": "***",
-		"password": "***",
-		"url": "https://***",
-		"org": "com.example"
-	},
-	"artifact-deploy-public-http": {
-		"username": "***",
-		"password": "***",
-		"url": "https://***",
-		"org": "com.example"
-	},
-	"docker-http": {
-		"username": "***",
-		"password": "***",
-		"url": "***",
-		"push-url": "***",
-		"org": "***"
 	}
 }
 ```
