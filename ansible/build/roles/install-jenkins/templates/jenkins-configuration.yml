@@ -128,7 +128,7 @@ jenkins:
         monitoring: false
         numExecutors: 2
         remoteAdmin: "jenkins"
-        securityGroups: "{{ environment.InstanceSecurityGroupId }"
+        securityGroups: "{{ environment.InstanceSecurityGroupId }}"
         stopOnTerminate: false
         subnetId: "{{ environment.PrivateSubnet1A }} {{ environment.PrivateSubnet2A }}"
         metadataEndpointEnabled: true
