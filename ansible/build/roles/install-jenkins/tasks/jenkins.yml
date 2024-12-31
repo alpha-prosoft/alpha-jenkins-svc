@@ -212,6 +212,8 @@
   - name: uno-choice
   - name: docker-workflow
   - name: pipeline-graph-view
+  - name: aws-credentials
+  - name: aws-java-sdk-ec2
 
 - name: 'Stop jenkins'
   service:
