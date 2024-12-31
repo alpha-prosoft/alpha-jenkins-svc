@@ -18,7 +18,7 @@ with open("/etc/jenkins-config.json") as f:
 with open("/etc/environment.json") as f:
     data["environment"] = json.load(f)
 
-templateLoader = jinja2.FileSystemLoader(searchpath="./")
+templateLoader = jinja2.FileSystemLoader(searchpath="/")
 templateEnv = jinja2.Environment(loader=templateLoader)
 template = templateEnv.get_template(sys.argv[1])
 
