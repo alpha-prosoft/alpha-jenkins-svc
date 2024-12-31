@@ -20,18 +20,18 @@ credentials:
       - usernamePassword:
           id: "artifact-deploy-http"
           scope: GLOBAL
-          username: "{{ services.artifactsDeployHttp.username }}"
-          password: "{{ services.artifactsDeployHttp.username }}"
+          username: "{{ services.artifactDeployHttp.username }}"
+          password: "{{ services.artifactDeployHttp.username }}"
       - usernamePassword:
           id: "artifact-deploy-dev-http"
           scope: GLOBAL
-          username: "{{ services.artifactsDeployDevHttp.username }}"
-          password: "{{ services.artifactsDeployDevHttp.username }}"
+          username: "{{ services.artifactDeployDevHttp.username }}"
+          password: "{{ services.artifactDeployDevHttp.username }}"
       - usernamePassword:
           id: "artifact-deploy-public-http"
           scope: GLOBAL
-          username: "{{ services.artifactsDeployPublicHttp.username }}"
-          password: "{{ services.artifactsDeployPublicHttp.username }}"
+          username: "{{ services.artifactDeployPublicHttp.username }}"
+          password: "{{ services.artifactDeployPublicHttp.username }}"
       - usernamePassword:
           id: "docker-http"
           scope: GLOBAL
@@ -62,7 +62,7 @@ jenkins:
   - envVars:
       env:
       - key: "GLOBAL_PROPERTIES_DOCKER_BUILD_ARGS"
-        value: "--build-arg DOCKER_URL={{ services.dockerHttp.url }} --build-arg DOCKER_PUSH_URL={{ services.dockerHttp.pushUrl }} --build-arg DOCKER_ORG={{ services.dockerHttp.org }} --build-arg BUILD_ID=${BUILD_ID}  --progress plain --progress plain --build-arg ARTIFACT_ORG={{ services.artifactsDeployHttp.org }}"
+        value: "--build-arg DOCKER_URL={{ services.dockerHttp.url }} --build-arg DOCKER_PUSH_URL={{ services.dockerHttp.pushUrl }} --build-arg DOCKER_ORG={{ services.dockerHttp.org }} --build-arg BUILD_ID=${BUILD_ID}  --progress plain --progress plain --build-arg ARTIFACT_ORG={{ services.artifactDeployHttp.org }}"
       - key: "DOCKER_ORG"
         value: "{{ services.dockerHttp.org }}"
       - key: "DOCKER_DEV_ORG"
@@ -80,19 +80,19 @@ jenkins:
       - key: "GLOBAL_JIRA_URL"
         value: "{{ services.jira.url }}"
       - key: "GLOBAL_REPOSITORY_DEV_URL"
-        value: "{{ services.artifactsDeployDevHttp.url }}"
+        value: "{{ services.artifactDeployDevHttp.url }}"
       - key: "GLOBAL_REPOSITORY_PROD_URL"
-        value: "{{ services.artifactsDeployHttp.url }}"
+        value: "{{ services.artifactDeployHttp.url }}"
       - key: "GLOBAL_REPOSITORY_PUBLIC_URL"
-        value: "{{ services.artifactsDeployPublicHttp.url }}"
+        value: "{{ services.artifactDeployPublicHttp.url }}"
       - key: "ARTIFACT_ORG"
-        value: "{{ services.artifactsDeployHttp.org }}"
+        value: "{{ services.artifactDeployHttp.org }}"
       - key: "ARTIFACT_DEV_ORG"
-        value: "{{ services.artifactsDeployDevHttp.org }}"
+        value: "{{ services.artifactDeployDevHttp.org }}"
       - key: "ARTIFACT_PUBLIC_ORG"
-        value: "{{ services.artifactsDeployPublicHttp.org }}"
+        value: "{{ services.artifactDeployPublicHttp.org }}"
       - key: "GLOBAL_GROUP_ID"
-        value: "{{ services.artifactsDeployHttp.org }}"
+        value: "{{ services.artifactDeployHttp.org }}"
       - key: "CONFIG_FILE_URL"
         value: "s3://{{ environment.AccountId }}-{{ environment.EnvironmentNameLower }}-configuration/accounts.json"
       - key: "AWS_REGION"
