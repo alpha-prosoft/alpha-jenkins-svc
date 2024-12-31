@@ -228,7 +228,7 @@
     group: jenkins
 
 - name: 'Copy jenkins configuration'
-  template:
+  copy:
     src: jenkins-configuration.yml
     dest: /etc/jenkins/jenkins-configuration-template.yml
     owner: jenkins
@@ -236,7 +236,7 @@
     mode: '0644'
 
 - name: 'Copy gerrit configuration'
-  template:
+  copy:
     src: gerrit-trigger.xml
     dest: /etc/jenkins/gerrit-trigger-template.xml
     owner: jenkins
