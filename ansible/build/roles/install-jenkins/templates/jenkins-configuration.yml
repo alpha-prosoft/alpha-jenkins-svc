@@ -6,37 +6,47 @@ credentials:
           id: "gerrit-http"
           scope: GLOBAL
           username: "jenkins"
-          password: "${GerritHttpPassword}"
+          password: "unknown"
       - usernamePassword:
           id: "jira-http"
           scope: GLOBAL
-          username: "${JiraHttpUser}"
-          password: "${JiraHttpPassword}"
+          username: "{{ services.jira.username }}"
+          password: "{{ services.jira.password }}"
       - usernamePassword:
           id: "github-http"
           scope: GLOBAL
-          username: "${GithubHttpUser}"
-          password: "${GithubHttpPassword}"
+          username: "{{ services.github.username }}"
+          password: "{{ services.github.username }}"
       - usernamePassword:
           id: "artifact-deploy-http"
           scope: GLOBAL
-          username: "${ArtifactDeployHttpUser}"
-          password: "${ArtifactDeployHttpPassword}"
-      - usernamePassword:
-          id: "artifact-deploy-public-http"
-          scope: GLOBAL
-          username: "${ArtifactDeployPublicHttpUser}"
-          password: "${ArtifactDeployPublicHttpPassword}"
+          username: "{{ services.artifactsDeployHttp.username }}"
+          password: "{{ services.artifactsDeployHttp.username }}"
       - usernamePassword:
           id: "artifact-deploy-dev-http"
           scope: GLOBAL
-          username: "${ArtifactDeployDevHttpUser}"
-          password: "${ArtifactDeployDevHttpPassword}"
+          username: "{{ services.artifactsDeployDevHttp.username }}"
+          password: "{{ services.artifactsDeployDevHttp.username }}"
+      - usernamePassword:
+          id: "artifact-deploy-public-http"
+          scope: GLOBAL
+          username: "{{ services.artifactsDeployPublicHttp.username }}"
+          password: "{{ services.artifactsDeployPublicHttp.username }}"
       - usernamePassword:
           id: "docker-http"
           scope: GLOBAL
-          username: "${DockerHttpUser}"
-          password: "${DockerHttpPassword}"
+          username: "{{ services.dockerHttp.username }}"
+          password: "{{ services.dockerHttp.username }}"
+      - usernamePassword:
+          id: "docker-dev-http"
+          scope: GLOBAL
+          username: "{{ services.dockerDevHttp.username }}"
+          password: "{{ services.dockerDevHttp.username }}"
+      - usernamePassword:
+          id: "docker-public-http"
+          scope: GLOBAL
+          username: "{{ services.dockerPublicHttp.username }}"
+          password: "{{ services.dockerPublicHttp.username }}"
       - basicSSHUserPrivateKey:
           scope: GLOBAL
           id: "gerrit-ssh"
@@ -52,50 +62,50 @@ jenkins:
   - envVars:
       env:
       - key: "GLOBAL_PROPERTIES_DOCKER_BUILD_ARGS"
-        value: "--build-arg DOCKER_URL=${DockerHttpUrl} --build-arg DOCKER_PUSH_URL=${DockerPushHttpUrl} --build-arg DOCKER_ORG=${DockerHttpOrg} --build-arg BUILD_ID=§{BUILD_ID}  --progress plain --progress plain --build-arg ARTIFACT_ORG=${ArtifactDeployOrg}"
+        value: "--build-arg DOCKER_URL={{ services.dockerHttp.url }} --build-arg DOCKER_PUSH_URL={{ services.dockerHttp.pushUrl }} --build-arg DOCKER_ORG={{ services.dockerHttp.org }} --build-arg BUILD_ID=${BUILD_ID}  --progress plain --progress plain --build-arg ARTIFACT_ORG={{ services.artifactsDeployHttp.org }}"
       - key: "DOCKER_ORG"
-        value: "${DockerHttpOrg}"
+        value: "{{ services.dockerHttp.org }}"
       - key: "DOCKER_DEV_ORG"
-        value: "${DockerHttpOrg}"
+        value: "{{ services.dockerDevHttp.org }}"
       - key: "DOCKER_PUSH_URL"
-        value: "${DockerPushHttpUrl}"
+        value: "{{ services.dockerHttp.pushUrl }}"
       - key: "DOCKER_URL"
-        value: "${DockerHttpUrl}"
+        value: "{{ services.dockerHttp.url }}"
       - key: "GERRIT_EMAIL"
         value: "jenkins@alpha-prosoft.com"
       - key: "GERRIT_URL"
-        value: "gerrit.${PrivateHostedZoneName}"
+        value: "gerrit.{{ environment.PrivateHostedZoneName }}"
       - key: "GERRIT_USER"
         value: "jenkins"
       - key: "GLOBAL_JIRA_URL"
-        value: "${JiraHttpUrl}"
+        value: "{{ services.jira.url }}"
       - key: "GLOBAL_REPOSITORY_DEV_URL"
-        value: "${ArtifactDeployDevHttpUrl}"
+        value: "{{ services.artifactsDeployDevHttp.url }}"
       - key: "GLOBAL_REPOSITORY_PROD_URL"
-        value: "${ArtifactDeployHttpUrl}"
+        value: "{{ services.artifactsDeployHttp.url }}"
       - key: "GLOBAL_REPOSITORY_PUBLIC_URL"
-        value: "${ArtifactDeployPublicHttpUrl}"
+        value: "{{ services.artifactsDeployPublicHttp.url }}"
       - key: "ARTIFACT_ORG"
-        value: "${ArtifactDeployOrg}"
+        value: "{{ services.artifactsDeployHttp.org }}"
       - key: "ARTIFACT_DEV_ORG"
-        value: "${ArtifactDeployDevOrg}"
+        value: "{{ services.artifactsDeployDevHttp.org }}"
       - key: "ARTIFACT_PUBLIC_ORG"
-        value: "${ArtifactDeployPublicOrg}"
+        value: "{{ services.artifactsDeployPublicHttp.org }}"
       - key: "GLOBAL_GROUP_ID"
-        value: "${ArtifactDeployOrg}"
+        value: "{{ services.artifactsDeployHttp.org }}"
       - key: "CONFIG_FILE_URL"
-        value: "s3://${AccountId}-${EnvironmentNameLower}-configuration/accounts.json"
+        value: "s3://{{ environment.AccountId }}-{{ environment.EnvironmentNameLower }}-configuration/accounts.json"
       - key: "AWS_REGION"
-        value: "${Region}"
+        value: "{{ environment.Region }}"
       - key: "AWS_DEFAULT_REGION"
-        value: "${Region}"
+        value: "{{ environment.Region }}"
   clouds:
   - amazonEC2:
       name: "EC2 Builder Dev"
-      region: "${Region}"
+      region: "{{ environment.Region }}"
       sshKeysCredentialsId: "gerrit-ssh"
       templates:
-      - ami: "${AmiId}"
+      - ami: "{{ environment.AmiId }}"
         amiType:
           unixData:
             sshPort: "22"
@@ -107,7 +117,7 @@ jenkins:
         description: "AWS Dev Workers"
         ebsOptimized: false
         hostKeyVerificationStrategy: 'OFF'
-        iamInstanceProfile: "${InstanceProfileArn}"
+        iamInstanceProfile: "{{ environment.InstanceProfileArn }}"
         idleTerminationMinutes: "10"
         instanceCapStr: "1"
         labelString: "aws-dev-worker"
@@ -118,9 +128,9 @@ jenkins:
         monitoring: false
         numExecutors: 2
         remoteAdmin: "jenkins"
-        securityGroups: "${InstanceSecurityGroupId}"
+        securityGroups: "{{ environment.InstanceSecurityGroupId }"
         stopOnTerminate: false
-        subnetId: "${PrivateSubnet1A} ${PrivateSubnet2A}"
+        subnetId: "{{ environment.PrivateSubnet1A }} {{ environment.PrivateSubnet2A }}"
         metadataEndpointEnabled: true
         metadataHopsLimit: 5
         metadataSupported: true
@@ -135,27 +145,27 @@ jenkins:
 
           set -e
 
-          export EnvironmentNameUpper=${EnvironmentNameUpper}
-          export EnvironmentNameLower=${EnvironmentNameLower}
-          export EnvironmentNameLower=${EnvironmentNameLower}
-          export EnvironmentNameUpper=${EnvironmentNameUpper}
-          export EnvironmentNameUpper=${EnvironmentNameUpper}
-          export EnvironmentNameLower=${EnvironmentNameLower}
-          export ServiceName=${ServiceName}
-          export ServiceAlias=${ServiceAlias}
-          export Region=${Region}
-          export AccountId=${AccountId}
-          export Username=${Username}
+          export EnvironmentNameUpper={{ environment.EnvironmentNameUpper }}
+          export EnvironmentNameLower={{ environment.EnvironmentNameLower }}
+          export EnvironmentNameLower={{ environment.EnvironmentNameLower }}
+          export EnvironmentNameUpper={{ environment.EnvironmentNameUpper }}
+          export EnvironmentNameUpper={{ environment.EnvironmentNameUpper }}
+          export EnvironmentNameLower={{ environment.EnvironmentNameLower }}
+          export ServiceName={{ environment.ServiceName }}
+          export ServiceAlias={{ environment.ServiceAlias }}
+          export Region={{ environment.Region }}
+          export AccountId={{ environment.AccountId }}
+          export Username={{ environment.Username }}
 
           /opt/login-job.sh
 
       useInstanceProfileForCredentials: true
   - amazonEC2:
       name: "EC2 Builder Prod"
-      region: "${Region}"
+      region: "{{ environment.Region }}"
       sshKeysCredentialsId: "gerrit-ssh"
       templates:
-      - ami: "${AmiId}"
+      - ami: "{{ environment.AmiId }}"
         amiType:
           unixData:
             sshPort: ""
@@ -167,7 +177,7 @@ jenkins:
         description: "AWS Prod Workers"
         ebsOptimized: false
         hostKeyVerificationStrategy: 'OFF'
-        iamInstanceProfile: "${InstanceProfileArn}"
+        iamInstanceProfile: "{{ environment.InstanceProfileArn }}"
         idleTerminationMinutes: "5"
         instanceCapStr: "1"
         labelString: "aws-prod-worker"
@@ -178,9 +188,9 @@ jenkins:
         monitoring: false
         numExecutors: 1
         remoteAdmin: "jenkins"
-        securityGroups: "${InstanceSecurityGroupId}"
+        securityGroups: "{{ environment.InstanceSecurityGroupId }}"
         stopOnTerminate: false
-        subnetId: "${PrivateSubnet1A} ${PrivateSubnet2A}"
+        subnetId: "{{ environment.PrivateSubnet1A }} {{ environment.PrivateSubnet2A }}"
         metadataEndpointEnabled: true
         metadataHopsLimit: 5
         metadataSupported: true
@@ -195,17 +205,17 @@ jenkins:
 
           set -e
 
-          export EnvironmentNameUpper=${EnvironmentNameUpper}
-          export EnvironmentNameLower=${EnvironmentNameLower}
-          export EnvironmentNameLower=${EnvironmentNameLower}
-          export EnvironmentNameUpper=${EnvironmentNameUpper}
-          export EnvironmentNameUpper=${EnvironmentNameUpper}
-          export EnvironmentNameLower=${EnvironmentNameLower}
-          export ServiceName=${ServiceName}
-          export ServiceAlias=${ServiceAlias}
-          export Region=${Region}
-          export AccountId=${AccountId}
-          export Username=${Username}
+          export EnvironmentNameUpper={{ environment.EnvironmentNameUpper }}
+          export EnvironmentNameLower={{ environment.EnvironmentNameLower }}
+          export EnvironmentNameLower={{ environment.EnvironmentNameLower }}
+          export EnvironmentNameUpper={{ environment.EnvironmentNameUpper }}
+          export EnvironmentNameUpper={{ environment.EnvironmentNameUpper }}
+          export EnvironmentNameLower={{ environment.EnvironmentNameLower }}
+          export ServiceName={{ environment.ServiceName }}
+          export ServiceAlias={{ environment.ServiceAlias }}
+          export Region={{ environment.Region }}
+          export AccountId={{ environment.AccountId }}
+          export Username={{ environment.Username }}
 
           /opt/login-job.sh
 
@@ -280,7 +290,7 @@ unclassified:
   gitHubConfiguration:
     apiRateLimitChecker: ThrottleForNormalize
   gitHubPluginConfig:
-    hookUrl: "https://${ServiceAlias}.${PrivateHostedZoneName}/github-webhook/"
+    hookUrl: "https://{{ environment.ServiceAlias }}.{{ environment.PrivateHostedZoneName }}/github-webhook/"
   scmGit:
     createAccountBasedOnEmail: false
     showEntireCommitSummaryInChanges: false
@@ -323,7 +333,7 @@ unclassified:
 
   location:
     adminAddress: "address not configured yet <nobody@nowhere>"
-    url: "https://${ServiceAlias}.${PrivateHostedZoneName}/"
+    url: "https://{{ environment.ServiceAlias }}.{{ environment.PrivateHostedZoneName }}/"
   mailer:
     charset: "UTF-8"
     useSsl: false
