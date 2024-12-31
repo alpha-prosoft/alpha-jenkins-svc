@@ -21,7 +21,7 @@ Setup assumes secret in AWS secret manager under `/${EnvironmentNameLower}/jenki
 #Credentials for jira
 ```json
 {
-	"credentials": {
+	"services": {
 		"jira": {
 			"username": "***",
 			"password": "***",
@@ -32,25 +32,39 @@ Setup assumes secret in AWS secret manager under `/${EnvironmentNameLower}/jenki
 			"password": "***",
 			"url": "https://***"
 		},
-		"artifact-deploy-http": {
+		"artifactDeployHttp": {
 			"username": "***",
 			"password": "***",
 			"url": "https://***",
 			"org": "com.example"
 		},
-		"artifact-deploy-dev-http": {
+		"artifactDeployDevHttp": {
 			"username": "***",
 			"password": "***",
 			"url": "https://***",
 			"org": "com.example"
 		},
-		"artifact-deploy-public-http": {
+		"artifactDeployPublicHttp": {
 			"username": "***",
 			"password": "***",
 			"url": "https://***",
 			"org": "com.example"
 		},
-		"docker-http": {
+		"dockerHttp": {
+			"username": "***",
+			"password": "***",
+			"url": "***",
+			"push-url": "***",
+			"org": "***"
+		},
+		"dockerDevHttp": {
+			"username": "***",
+			"password": "***",
+			"url": "***",
+			"push-url": "***",
+			"org": "***"
+		},
+		"dockerPublicHttp": {
 			"username": "***",
 			"password": "***",
 			"url": "***",
