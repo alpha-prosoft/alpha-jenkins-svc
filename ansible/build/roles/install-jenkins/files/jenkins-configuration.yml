@@ -248,6 +248,8 @@ jenkins:
     reverseProxy:
       disableLdapEmailResolver: false
       forwardedUser: "A-User"
+      forwardedEmail: "A-Email"
+      forwardedDisplayName: "A-Name"
       headerGroups: "A-Groups"
       headerGroupsDelimiter: "|"
       inhibitInferRootDN: false
