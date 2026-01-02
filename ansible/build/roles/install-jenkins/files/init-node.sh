@@ -6,7 +6,7 @@ source /etc/environment
 mkdir -p /home/jenkins/.ssh
 
 aws ssm get-parameter \
-  --name "/${EnvironmentNameLower}/public/.ssh/id_rsa.pub" \
+  --name "/${EnvironmentNameLower}/public/jenkins/.ssh/id_rsa.pub" \
   --with-decryption \
   --query 'Parameter.Value' \
   --output text | base64 -d >/home/jenkins/.ssh/authorized_keys
