@@ -32,10 +32,12 @@
             Resource: "*"
 
   - include_role:
-      name: alpha-deploy-lib/deploy-instance
+      name: alpha-deploy-lib/deploy-cloudformation
     vars:
+      cloud_formation: '{{ playbook_dir }}/files/ecs.yaml'
+      type: 'SERVICE'
       settings:
         VolumePath: /var/lib/jenkins
-        ServiceAlias: jenkins
+        ServiceAlias: pipeline
         CustomPolicy: '{{ custom_policy | to_json }}'
 

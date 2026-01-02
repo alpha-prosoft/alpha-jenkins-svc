@@ -1,0 +1,11 @@
+[Unit]
+Description=Alpha Login Timer - runs every 10 minutes
+Requires=alpha-login.service
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=10min
+Unit=alpha-login.service
+
+[Install]
+WantedBy=timers.target

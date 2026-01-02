@@ -243,6 +243,48 @@
     group: jenkins
     mode: '0644'
 
+- name: 'Copy login.sh script to /opt/'
+  copy:
+    src: login.sh
+    dest: /opt/login.sh
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: 'Copy login-job.sh script to /opt/'
+  copy:
+    src: login-job.sh
+    dest: /opt/login-job.sh
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: 'Copy alpha-login systemd service'
+  copy:
+    src: alpha-login.service
+    dest: /etc/systemd/system/alpha-login.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: 'Copy alpha-login systemd timer'
+  copy:
+    src: alpha-login.timer
+    dest: /etc/systemd/system/alpha-login.timer
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: 'Reload systemd daemon'
+  systemd:
+    daemon_reload: yes
+
+- name: 'Enable and start alpha-login timer'
+  systemd:
+    name: alpha-login.timer
+    enabled: yes
+    state: started
+
 - name: 'Copy plugins to be used for update on existin instance. Sinde mount will be places in /var/lib/jenkins'
   shell: |
       set -e
