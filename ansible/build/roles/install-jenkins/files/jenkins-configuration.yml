@@ -156,7 +156,6 @@ jenkins:
           EOF
           
           # Start alpha-login service once and enable its timer
-          /opt/login-job.sh
           systemctl enable alpha-login.timer
           systemctl start alpha-login.timer
           
@@ -235,7 +234,6 @@ jenkins:
           EOF
           
           # Start alpha-login service once and enable its timer
-          /opt/login-job.sh
           systemctl enable alpha-login.timer
           systemctl start alpha-login.timer
           
