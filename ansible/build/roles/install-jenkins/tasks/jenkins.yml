@@ -279,11 +279,10 @@
   systemd:
     daemon_reload: yes
 
-- name: 'Enable and start alpha-login timer'
+- name: 'Disable alpha-login timer (will be enabled by userData)'
   systemd:
     name: alpha-login.timer
-    enabled: yes
-    state: started
+    enabled: no
 
 - name: 'Copy plugins to be used for update on existin instance. Sinde mount will be places in /var/lib/jenkins'
   shell: |

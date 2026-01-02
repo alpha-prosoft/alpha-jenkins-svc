@@ -23,12 +23,19 @@
     src: 'init-node.service'
     dest: '/etc/systemd/system/init-node.service'
 
+- name: 'Copy init-node timer'
+  copy: 
+    src: 'init-node.timer'
+    dest: '/etc/systemd/system/init-node.timer'
 
-- name: 'Enable node service' 
+- name: 'Reload systemd daemon for init-node'
+  systemd:
+    daemon_reload: yes
+
+- name: 'Disable init-node service (will be enabled by userData)'
   service:
-    name: 'init-node'
-    state: stopped
-    enabled: yes
+    name: 'init-node.service'
+    enabled: no
 
 - include_tasks: jenkins.yml
 
