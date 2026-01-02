@@ -16,37 +16,37 @@ credentials:
           id: "github-http"
           scope: GLOBAL
           username: "{{ services.github.username }}"
-          password: "{{ services.github.username }}"
+          password: "{{ services.github.password }}"
       - usernamePassword:
           id: "artifact-deploy-http"
           scope: GLOBAL
           username: "{{ services.artifactDeployHttp.username }}"
-          password: "{{ services.artifactDeployHttp.username }}"
+          password: "{{ services.artifactDeployHttp.password }}"
       - usernamePassword:
           id: "artifact-deploy-dev-http"
           scope: GLOBAL
           username: "{{ services.artifactDeployDevHttp.username }}"
-          password: "{{ services.artifactDeployDevHttp.username }}"
+          password: "{{ services.artifactDeployDevHttp.password }}"
       - usernamePassword:
           id: "artifact-deploy-public-http"
           scope: GLOBAL
           username: "{{ services.artifactDeployPublicHttp.username }}"
-          password: "{{ services.artifactDeployPublicHttp.username }}"
+          password: "{{ services.artifactDeployPublicHttp.password }}"
       - usernamePassword:
           id: "docker-http"
           scope: GLOBAL
           username: "{{ services.dockerHttp.username }}"
-          password: "{{ services.dockerHttp.username }}"
+          password: "{{ services.dockerHttp.password }}"
       - usernamePassword:
           id: "docker-dev-http"
           scope: GLOBAL
           username: "{{ services.dockerDevHttp.username }}"
-          password: "{{ services.dockerDevHttp.username }}"
+          password: "{{ services.dockerDevHttp.password }}"
       - usernamePassword:
           id: "docker-public-http"
           scope: GLOBAL
           username: "{{ services.dockerPublicHttp.username }}"
-          password: "{{ services.dockerPublicHttp.username }}"
+          password: "{{ services.dockerPublicHttp.password }}"
       - basicSSHUserPrivateKey:
           scope: GLOBAL
           id: "gerrit-ssh"
