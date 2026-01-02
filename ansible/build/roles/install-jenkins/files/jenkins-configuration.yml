@@ -109,7 +109,6 @@ jenkins:
         amiType:
           unixData:
             sshPort: "22"
-        associatePublicIp: true
         connectBySSHProcess: false
         connectionStrategy: PRIVATE_IP
         customDeviceMapping: "/dev/xvda=:300:true:gp3::encrypted:500"
@@ -169,7 +168,6 @@ jenkins:
         amiType:
           unixData:
             sshPort: ""
-        associatePublicIp: true
         connectBySSHProcess: false
         connectionStrategy: PRIVATE_IP
         customDeviceMapping: "/dev/xvda=:300:true:gp3::encrypted:500"
@@ -233,7 +231,6 @@ jenkins:
   - name: "master"
   markupFormatter: "plainText"
   mode: NORMAL
-  myViewsTabBar: "standard"
   numExecutors: 2
   primaryView:
     all:
