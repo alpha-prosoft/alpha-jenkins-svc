@@ -1,0 +1,11 @@
+[Unit]
+Description=Run init-node script every 12 minutes
+Requires=init-node.service
+
+[Timer]
+OnActiveSec=0
+OnUnitActiveSec=12min
+Unit=init-node.service
+
+[Install]
+WantedBy=timers.target
