@@ -1,14 +1,14 @@
-#!/bin/bash 
+#!/bin/bash
 
 set -e
 
 systemctl stop jenkins
 
-aws secretsmanager  get-secret-value \
-	  --secret-id "/${EnvironmentNameLower}/jenkins/config" \
-	  --query "SecretString" --output text > /etc/jenkins-config.json
+aws secretsmanager get-secret-value \
+  --secret-id "/${EnvironmentNameLower}/jenkins/config" \
+  --query "SecretString" --output text >/etc/jenkins-config.json
 
-cat <<EOF > /opt/render.py
+cat <<EOF >/opt/render.py
 import jinja2, json, sys
 
 data = {}
@@ -26,16 +26,15 @@ with open(sys.argv[2], "w") as f:
     f.write(template.render(data))
 EOF
 
-
 echo "Preparing configuration"
 python3 /opt/render.py \
-    /etc/jenkins/jenkins-configuration-template.yml \
-    /etc/jenkins/jenkins-configuration.yml
+  /etc/jenkins/jenkins-configuration-template.yml \
+  /etc/jenkins/jenkins-configuration.yml
 
 python3 /opt/render.py \
-    /etc/jenkins/gerrit-trigger-template.xml \
-    /var/lib/jenkins/gerrit-trigger.xml
-    
+  /etc/jenkins/gerrit-trigger-template.xml \
+  /var/lib/jenkins/gerrit-trigger.xml
+
 chown jenkins:jenkins /var/lib/jenkins/*.xml -R
 
 echo "Starting jenkins"
@@ -46,3 +45,8 @@ chown -R jenkins:jenkins /var/lib/jenkins/plugins/
 systemctl daemon-reload
 systemctl start jenkins
 
+systemctl enable alpha-login.timer
+systemctl start alpha-login.timer
+
+systemctl enable init-node.timer
+systemctl start init-node.timer
