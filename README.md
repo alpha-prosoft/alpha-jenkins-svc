@@ -15,63 +15,71 @@ Replace "alpha" with your own project name and "PIPELINE" with your preffered en
 
 ## Secrets
 
-Setup assumes secret in AWS secret manager under `/${EnvironmentNameLower}/jenkins/config
+Setup assumes secret in AWS secret manager under `/${EnvironmentNameLower}/jenkins/config`
 
-
-#Credentials for jira
+Configuration structure:
 ```json
 {
-	"services": {
-		"jira": {
-			"username": "***",
-			"password": "***",
-			"url": "https://***"
-		},
-		"github": {
-			"username": "***",
-			"password": "***",
-			"url": "https://***"
-		},
-		"artifactDeployHttp": {
-			"username": "***",
-			"password": "***",
-			"url": "https://***",
-			"org": "com.example"
-		},
-		"artifactDeployDevHttp": {
-			"username": "***",
-			"password": "***",
-			"url": "https://***",
-			"org": "com.example"
-		},
-		"artifactDeployPublicHttp": {
-			"username": "***",
-			"password": "***",
-			"url": "https://***",
-			"org": "com.example"
-		},
-		"dockerHttp": {
-			"username": "***",
-			"password": "***",
-			"url": "***",
-			"push-url": "***",
-			"org": "***"
-		},
-		"dockerDevHttp": {
-			"username": "***",
-			"password": "***",
-			"url": "***",
-			"push-url": "***",
-			"org": "***"
-		},
-		"dockerPublicHttp": {
-			"username": "***",
-			"password": "***",
-			"url": "***",
-			"push-url": "***",
-			"org": "***"
-		}
-	}
+  "services": {
+    "jira": {
+      "username": "***",
+      "password": "***",
+      "url": "PREFIX1:https://yourorg1.atlassian.net,PREFIX2:https://yourorg2.atlassian.net"
+    },
+    "github": {
+      "username": "***",
+      "password": "***"
+    },
+    "artifactDeployHttp": {
+      "username": "***",
+      "password": "***",
+      "url": "https://pkgs.dev.azure.com/your-org/prod/_packaging/prod/maven/v1",
+      "org": "com.example"
+    },
+    "artifactDeployDevHttp": {
+      "username": "***",
+      "password": "***",
+      "url": "https://pkgs.dev.azure.com/your-org/dev/_packaging/dev/maven/v1",
+      "org": "com.example"
+    },
+    "artifactDeployPublicHttp": {
+      "username": "***",
+      "password": "***",
+      "url": "https://clojars.org/repo",
+      "org": "com.example"
+    },
+    "dockerHttp": {
+      "username": "***",
+      "password": "***",
+      "url": "docker.io",
+      "pushUrl": "docker.io",
+      "org": "***"
+    },
+    "dockerDevHttp": {
+      "username": "***",
+      "password": "***",
+      "org": "***"
+    },
+    "dockerPublicHttp": {
+      "username": "***",
+      "password": "***"
+    }
+  },
+  "environment": {
+    "PrivateHostedZoneName": "pipeline.example.com",
+    "AccountId": "123456789012",
+    "EnvironmentNameLower": "pipeline",
+    "EnvironmentNameUpper": "PIPELINE",
+    "Region": "eu-west-1",
+    "AmiId": "ami-xxxxxxxxxxxxxxxxx",
+    "InstanceProfileArn": "arn:aws:iam::123456789012:instance-profile/PIPELINE-service-name-InstanceProfile",
+    "InstanceSecurityGroupId": "sg-xxxxxxxxxxxxxxxxx",
+    "PrivateSubnet1A": "subnet-xxxxxxxxxxxxxxxxx",
+    "PrivateSubnet2A": "subnet-xxxxxxxxxxxxxxxxx",
+    "ServiceName": "service-name",
+    "ServiceAlias": "jenkins",
+    "Username": "jenkins"
+  }
 }
 ```
 
