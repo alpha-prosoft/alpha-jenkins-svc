@@ -61,44 +61,10 @@ jenkins:
   globalNodeProperties:
   - envVars:
       env:
-      - key: "GLOBAL_PROPERTIES_DOCKER_BUILD_ARGS"
-        value: "--build-arg DOCKER_URL={{ services.dockerHttp.url }} --build-arg DOCKER_PUSH_URL={{ services.dockerHttp.pushUrl }} --build-arg DOCKER_ORG={{ services.dockerHttp.org }} --build-arg BUILD_ID=${BUILD_ID}  --progress plain --progress plain --build-arg ARTIFACT_ORG={{ services.artifactDeployHttp.org }}"
-      - key: "DOCKER_ORG"
-        value: "{{ services.dockerHttp.org }}"
-      - key: "DOCKER_DEV_ORG"
-        value: "{{ services.dockerDevHttp.org }}"
-      - key: "DOCKER_PUSH_URL"
-        value: "{{ services.dockerHttp.pushUrl }}"
-      - key: "DOCKER_URL"
-        value: "{{ services.dockerHttp.url }}"
-      - key: "GERRIT_EMAIL"
-        value: "jenkins@alpha-prosoft.com"
-      - key: "GERRIT_URL"
-        value: "gerrit.{{ environment.PrivateHostedZoneName }}"
-      - key: "GERRIT_USER"
-        value: "jenkins"
-      - key: "GLOBAL_JIRA_URL"
-        value: "{{ services.jira.url }}"
-      - key: "GLOBAL_REPOSITORY_DEV_URL"
-        value: "{{ services.artifactDeployDevHttp.url }}"
-      - key: "GLOBAL_REPOSITORY_PROD_URL"
-        value: "{{ services.artifactDeployHttp.url }}"
-      - key: "GLOBAL_REPOSITORY_PUBLIC_URL"
-        value: "{{ services.artifactDeployPublicHttp.url }}"
-      - key: "ARTIFACT_ORG"
-        value: "{{ services.artifactDeployHttp.org }}"
-      - key: "ARTIFACT_DEV_ORG"
-        value: "{{ services.artifactDeployDevHttp.org }}"
-      - key: "ARTIFACT_PUBLIC_ORG"
-        value: "{{ services.artifactDeployPublicHttp.org }}"
-      - key: "GLOBAL_GROUP_ID"
-        value: "{{ services.artifactDeployHttp.org }}"
-      - key: "CONFIG_FILE_URL"
-        value: "s3://{{ environment.AccountId }}-{{ environment.EnvironmentNameLower }}-configuration/accounts.json"
-      - key: "AWS_REGION"
-        value: "{{ environment.Region }}"
-      - key: "AWS_DEFAULT_REGION"
-        value: "{{ environment.Region }}"
+      {% for key, value in env.items() %}
+      - key: {{ key | tojson }}
+        value: {{ value | tojson }}
+      {% endfor %}
   clouds:
   - amazonEC2:
       name: "EC2 Builder Dev"

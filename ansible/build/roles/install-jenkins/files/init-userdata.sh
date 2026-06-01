@@ -1,52 +1,59 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
-systemctl stop jenkins
+log() { echo "[init-userdata] $(date -u +%FT%TZ) $*"; }
 
-aws secretsmanager get-secret-value \
-  --secret-id "/${EnvironmentNameLower}/jenkins/config" \
-  --query "SecretString" --output text >/etc/jenkins-config.json
+config_param="/${EnvironmentNameLower}/jenkins/config"
+config_file="/etc/jenkins-config.json"
 
-cat <<EOF >/opt/render.py
-import jinja2, json, sys
+log "Stopping jenkins"
+systemctl stop jenkins || true
 
-data = {}
-with open("/etc/jenkins-config.json") as f:
-    data = json.load(f)
+log "Reading configuration from SSM parameter ${config_param}"
+attempt=1
+until aws ssm get-parameter \
+  --name "${config_param}" \
+  --with-decryption \
+  --query "Parameter.Value" \
+  --output text >"${config_file}.tmp"; do
+  if [[ "${attempt}" -ge 5 ]]; then
+    log "ERROR: could not read ${config_param} after ${attempt} attempts"
+    exit 1
+  fi
+  log "Read failed (attempt ${attempt}), retrying in 5s"
+  attempt=$((attempt + 1))
+  sleep 5
+done
 
-with open("/etc/environment.json") as f:
-    data["environment"] = json.load(f)
+log "Validating configuration"
+python3 -c "import json; json.load(open('${config_file}.tmp'))"
+mv "${config_file}.tmp" "${config_file}"
+chmod 600 "${config_file}"
 
-templateLoader = jinja2.FileSystemLoader(searchpath="/")
-templateEnv = jinja2.Environment(loader=templateLoader)
-template = templateEnv.get_template(sys.argv[1])
-
-with open(sys.argv[2], "w") as f:
-    f.write(template.render(data))
-EOF
-
-echo "Preparing configuration"
+log "Rendering jenkins configuration"
 python3 /opt/render.py \
   /etc/jenkins/jenkins-configuration-template.yml \
   /etc/jenkins/jenkins-configuration.yml
 
+log "Rendering gerrit trigger configuration"
 python3 /opt/render.py \
   /etc/jenkins/gerrit-trigger-template.xml \
   /var/lib/jenkins/gerrit-trigger.xml
 
-chown jenkins:jenkins /var/lib/jenkins/*.xml -R
+chown -R jenkins:jenkins /var/lib/jenkins/*.xml
 
-echo "Starting jenkins"
+log "Refreshing plugins"
 rm -rf /var/lib/jenkins/plugins/*
 cp /opt/jenkins/plugins/* /var/lib/jenkins/plugins/
 chown -R jenkins:jenkins /var/lib/jenkins/plugins/
 
+log "Starting jenkins"
 systemctl daemon-reload
 systemctl start jenkins
 
-systemctl enable alpha-login.timer
-systemctl start alpha-login.timer
+log "Enabling timers"
+systemctl enable --now alpha-login.timer
+systemctl enable --now init-node.timer
 
-systemctl enable init-node.timer
-systemctl start init-node.timer
+log "Done"

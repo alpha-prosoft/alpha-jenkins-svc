@@ -7,9 +7,15 @@
     user_name: 'jenkins'
 
 - name: 'Copy user config'
-  copy: 
+  copy:
     src: 'init-userdata.sh'
     dest: '/etc/init-userdata.sh'
+
+- name: 'Copy render script'
+  copy:
+    src: 'render.py'
+    dest: '/opt/render.py'
+    mode: 0755
 
 - name: 'Copy init-node script'
   copy: 
