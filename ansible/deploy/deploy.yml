@@ -1,5 +1,6 @@
-- name: 'Build Jenkins AMI'
+- name: 'Deploy Jenkins instance'
   hosts: localhost
+  connection: local
   tasks:
   - set_fact:
        custom_policy:
@@ -32,12 +33,9 @@
             Resource: "*"
 
   - include_role:
-      name: alpha-deploy-lib/deploy-cloudformation
+      name: alpha-deploy-lib/deploy-instance
     vars:
-      cloud_formation: '{{ playbook_dir }}/files/ecs.yaml'
-      type: 'SERVICE'
       settings:
         VolumePath: /var/lib/jenkins
-        ServiceAlias: pipeline
+        ServiceAlias: jenkins
         CustomPolicy: '{{ custom_policy | to_json }}'
-

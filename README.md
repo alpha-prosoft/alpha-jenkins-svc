@@ -6,12 +6,16 @@
 
 ## Build and run 
 
-Replace "alpha" with your own project name and "PIPELINE" with your preffered environment name
+Builds the AMI via `cbd-jenkins-pipeline/ext/build.sh`. Arguments are the resource name
+(default `jenkins`) and the environment name (default `PIPELINE`):
 
 ```
-./build-and-deploy.sh "alpha"
-
+./build-and-deploy.sh jenkins PIPELINE
 ```
+
+The script then deploys the image via `cbd-jenkins-pipeline/ext/run.sh`. To only deploy an already built
+image run `BUILD_ID=<id> target/run.sh jenkins PIPELINE`
+(`target/run.sh` is downloaded by `build-and-deploy.sh`).
 
 ## Configuration
 

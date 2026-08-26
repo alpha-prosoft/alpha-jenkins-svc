@@ -103,10 +103,30 @@
      systemctl daemon-reload
      echo "Done"
      
+- name: 'Create init.groovy.d directory'
+  file:
+    path: '/var/lib/jenkins/init.groovy.d'
+    state: directory
+    owner: jenkins
+    group: jenkins
+    mode: '0755'
+
+- name: 'Set Jenkins root URL at startup (required before CLI use)'
+  copy:
+    dest: '/var/lib/jenkins/init.groovy.d/00-set-location-url.groovy'
+    owner: jenkins
+    group: jenkins
+    mode: '0644'
+    content: |
+      import jenkins.model.JenkinsLocationConfiguration
+      def location = JenkinsLocationConfiguration.get()
+      location.setUrl("http://127.0.0.1:8080/")
+      location.save()
+
 - name: 'Start jenkins to generate inital password and instal plugins. We will start it manually later from userdata'
-  service: 
-    name: jenkins 
-    state: started 
+  service:
+    name: jenkins
+    state: started
     enabled: no
 
 - name: 'Ensure enkins is running'
@@ -170,8 +190,8 @@
     java -jar ~/jenkins-cli.jar -s http://127.0.0.1:8080 -auth 'admin:{{ jenkins_admin_password }}' install-plugin {{ item.name }}
   register: install_result
   until: "install_result is not failed"
-  retries: 3
-  delay: 10
+  retries: 6
+  delay: 15
   with_items: 
   - name: credentials
   - name: blueocean
@@ -330,10 +350,10 @@
      
      systemctl daemon-reload
   
-- shell: |
-    systemctl status jenkins.service
+- name: 'Show jenkins service status (informational)'
+  shell: 'systemctl status jenkins.service || true'
   register: output
-  ignore_errors: True
+  changed_when: false
 
 - debug: 
     var: output

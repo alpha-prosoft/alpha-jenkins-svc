@@ -227,9 +227,7 @@ jenkins:
   authorizationStrategy:
     loggedInUsersCanDoAnything:
       allowAnonymousRead: false
-  crumbIssuer:
-    standard:
-      excludeClientIPFromCrumb: false
+  crumbIssuer: "standard"
   disableRememberMe: false
   labelAtoms:
   - name: "master"
@@ -267,8 +265,6 @@ security:
     creationOfLegacyTokenEnabled: false
     tokenGenerationOnCreationEnabled: false
     usageStatisticsEnabled: true
-  sSHD:
-    port: -1
 unclassified:
   bitbucketEndpointConfiguration:
     endpoints:
