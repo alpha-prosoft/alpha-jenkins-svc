@@ -97,7 +97,7 @@
 
      echo "Configuring service"
      echo '[Service]' >> $ov 
-     echo 'Environment="JAVA_OPTS='${PROXY_CONF}' -Djava.awt.headless=true"' >> $ov
+     echo 'Environment="JAVA_OPTS='${PROXY_CONF}' -Djava.awt.headless=true -Djava.net.preferIPv4Stack=true"' >> $ov
 
      echo "Reloading daemon"
      systemctl daemon-reload
@@ -166,12 +166,15 @@
 
 - name: 'Downloads plugins updated'
   environment: '{{ params }}'
-  get_url:
-    url: "https://updates.jenkins.io/update-center.json"
-    dest: "/var/lib/jenkins/updates/default.json"
-    owner: jenkins
-    group: jenkins
-    mode: 0440
+  # curl -4 avoids intermittent IPv6 "Network is unreachable" from the update
+  # center on instances without an IPv6 route.
+  shell: |
+    set -euo pipefail
+    curl -4 -fsSL --retry 5 --retry-delay 10 --retry-all-errors \
+      https://updates.jenkins.io/update-center.json \
+      -o /var/lib/jenkins/updates/default.json
+    chown jenkins:jenkins /var/lib/jenkins/updates/default.json
+    chmod 0440 /var/lib/jenkins/updates/default.json
   changed_when: false
   register: get_result
   until: get_result is success
@@ -196,6 +199,7 @@
   - name: credentials
   - name: blueocean
   - name: reverse-proxy-auth-plugin
+  - name: oic-auth
   - name: ec2
   - name: configuration-as-code
   - name: dashboard-view
@@ -344,7 +348,7 @@
      echo 'Environment="JENKINS_PORT=8082"' >> $ov
 
      sed -i '/JAVA_OPTS/d' $ov
-     echo 'Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"' >> $ov
+     echo 'Environment="JAVA_OPTS=-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false -Djava.net.preferIPv4Stack=true"' >> $ov
      
      sed -i 's#<installStateName>NEW.*#<installStateName>RUNNING<\/installStateName>#g' /var/lib/jenkins/config.xml
      

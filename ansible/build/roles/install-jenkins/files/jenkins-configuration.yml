@@ -241,16 +241,19 @@ jenkins:
   quietPeriod: 5
   scmCheckoutRetryCount: 0
   securityRealm:
-    reverseProxy:
-      disableLdapEmailResolver: false
-      forwardedUser: "A-User"
-      forwardedEmail: "A-Email"
-      forwardedDisplayName: "A-Name"
-      headerGroups: "A-Groups"
-      headerGroupsDelimiter: "|"
-      inhibitInferRootDN: false
-      updateInterval: 15
-      userSearch: "uid={0}"
+    oic:
+      clientId: "<< environment.AuthUserPoolClientId >>"
+      clientSecret: "<< environment.AuthUserPoolClientSecret >>"
+      serverConfiguration:
+        wellKnown:
+          wellKnownOpenIDConfigurationUrl: "https://cognito-idp.<< environment.Region >>.amazonaws.com/<< environment.AuthUserPoolId >>/.well-known/openid-configuration"
+          scopesOverride: "openid email profile"
+      userNameField: "email"
+      fullNameFieldName: "name"
+      emailFieldName: "email"
+      groupsFieldName: "cognito:groups"
+      logoutFromOpenidProvider: true
+      postLogoutRedirectUrl: "https://<< environment.ServiceAlias >>.<< environment.PublicHostedZoneName >>/"
   slaveAgentPort: -1
   updateCenter:
     sites:
