@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-export RESOURCE_NAME=${1:-jenkins}
+export RESOURCE_NAME=${1:-alpha-jenkins-svc}
 export ENV_NAME_UPPER=${2:-PIPELINE}
 
 target_dir=${PWD}/target
