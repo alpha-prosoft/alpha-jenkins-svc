@@ -242,18 +242,18 @@ jenkins:
   scmCheckoutRetryCount: 0
   securityRealm:
     oic:
-      clientId: "<< environment.AuthUserPoolClientId >>"
-      clientSecret: "<< environment.AuthUserPoolClientSecret >>"
+      clientId: "{{ environment.AuthUserPoolClientId }}"
+      clientSecret: "{{ environment.AuthUserPoolClientSecret }}"
       serverConfiguration:
         wellKnown:
-          wellKnownOpenIDConfigurationUrl: "https://cognito-idp.<< environment.Region >>.amazonaws.com/<< environment.AuthUserPoolId >>/.well-known/openid-configuration"
+          wellKnownOpenIDConfigurationUrl: "https://cognito-idp.{{ environment.Region }}.amazonaws.com/{{ environment.AuthUserPoolId }}/.well-known/openid-configuration"
           scopesOverride: "openid email profile"
       userNameField: "email"
       fullNameFieldName: "name"
       emailFieldName: "email"
       groupsFieldName: "cognito:groups"
       logoutFromOpenidProvider: true
-      postLogoutRedirectUrl: "https://<< environment.ServiceAlias >>.<< environment.PublicHostedZoneName >>/"
+      postLogoutRedirectUrl: "https://{{ environment.ServiceAlias }}.{{ environment.PublicHostedZoneName }}/"
   slaveAgentPort: -1
   updateCenter:
     sites:
